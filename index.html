@@ -1,0 +1,2906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muhammad Aqib | Web &amp; Mobile Engineer</title>
+<meta name="description" content="Muhammad Aqib portfolio: Web and mobile engineer building production full-stack applications with React, Next.js, Flutter, Node.js, Supabase, and AI tooling.">
+<meta name="theme-color" content="#030208">
+<meta property="og:title" content="Muhammad Aqib | Web &amp; Mobile Engineer">
+<meta property="og:description" content="Explore live production applications deployed on Vercel, interactive device simulators, tech stacks, and a semantic portfolio assistant.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/WhatsApp Image 2026-07-21 at 8.41.50 AM.jpeg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Muhammad Aqib | Web &amp; Mobile Engineer">
+<meta name="twitter:description" content="Explore live production applications deployed on Vercel and interactive live demos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- GSAP & Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Muhammad Aqib",
+  "jobTitle": "Web and Mobile Engineer",
+  "email": "aqibk1051@gmail.com",
+  "telephone": "+92 336 3620708",
+  "address": {"@type": "PostalAddress", "addressLocality": "Islamabad", "addressCountry": "PK"},
+  "sameAs": ["https://github.com/10-aqib", "https://www.linkedin.com/", "https://www.instagram.com/aqibkhn._"],
+  "alumniOf": {"@type": "CollegeOrUniversity", "name": "Bahria University Islamabad"}
+}
+</script>
+<style>
+  :root {
+    --bg-base: #030208;
+    --panel-bg: rgba(15, 12, 29, 0.45);
+    --panel-border: rgba(255, 255, 255, 0.06);
+    --panel-border-hover: rgba(0, 255, 170, 0.35);
+    
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    
+    --accent-emerald: #00ffaa;
+    --accent-purple: #7d2ae8;
+    --accent-cyan: #00d2ff;
+    --accent-orange: #ff9900;
+    
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --max-w: 1280px;
+    --nav-h: 80px;
+    
+    --glow-emerald: 0 0 25px rgba(0, 255, 170, 0.2);
+    --glow-purple: 0 0 35px rgba(125, 42, 232, 0.25);
+    --glow-cyan: 0 0 30px rgba(0, 210, 255, 0.25);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  
+  body {
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-main);
+    background-color: var(--bg-base);
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  ::selection { background: var(--accent-purple); color: #fff; }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  ul { list-style: none; }
+  
+  /* Abstract Background Elements */
+  .ambient-glow {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.4;
+  }
+  .glow-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: rgba(125, 42, 232, 0.15); }
+  .glow-2 { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: rgba(0, 255, 170, 0.12); }
+  .glow-3 { top: 40%; left: 40%; width: 30vw; height: 30vw; background: rgba(0, 210, 255, 0.1); }
+
+  /* ThreeJS Canvas */
+  #canvas-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Utility & Layout */
+  .wrap {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+  section {
+    padding: 120px 0;
+    position: relative;
+  }
+  .section-header {
+    margin-bottom: 64px;
+    text-align: center;
+  }
+  .section-header.left-aligned {
+    text-align: left;
+  }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent-emerald);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-emerald);
+    box-shadow: 0 0 10px var(--accent-emerald);
+  }
+  h2 {
+    font-family: 'Sora', sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .section-subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    max-width: 720px;
+    margin: 12px auto 0;
+    font-weight: 300;
+  }
+
+  /* Glassmorphism Panel */
+  .glass-panel {
+    background: var(--panel-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-md);
+    padding: 32px;
+    transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+  }
+  .glass-panel:hover {
+    border-color: var(--panel-border-hover);
+  }
+
+  /* Corner Accents on Cards */
+  .corner-accent::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 24px;
+    height: 24px;
+    border-top: 2px solid var(--accent-cyan);
+    border-right: 2px solid var(--accent-cyan);
+    border-top-right-radius: var(--radius-md);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 99px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    white-space: nowrap;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+    color: #fff;
+    box-shadow: var(--glow-purple);
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-emerald));
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .btn-primary:hover::before { opacity: 1; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: var(--glow-emerald); }
+
+  .btn-outline {
+    background: rgba(255,255,255,0.03);
+    border-color: rgba(255,255,255,0.1);
+    color: var(--text-main);
+  }
+  .btn-outline:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    transform: translateY(-2px);
+  }
+
+  .btn-sm {
+    padding: 8px 16px;
+    font-size: 0.75rem;
+  }
+
+  .chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    padding: 5px 11px;
+    border-radius: 99px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+  }
+  .chip:hover {
+    border-color: var(--accent-purple);
+    color: var(--accent-cyan);
+    background: rgba(125, 42, 232, 0.12);
+  }
+
+  /* Navigation */
+  header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    padding: 24px;
+    transition: transform 0.4s ease, padding 0.4s ease;
+  }
+  header.scrolled {
+    padding: 12px 24px;
+  }
+  header.hide { transform: translateY(-100%); }
+  
+  .nav-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: rgba(10, 8, 20, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 99px;
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .logo {
+    font-family: 'Sora', sans-serif;
+    font-weight: 800;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+  }
+  .logo span { color: var(--accent-emerald); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+  }
+  .nav-links a {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+    position: relative;
+  }
+  .nav-links a:hover, .nav-links a.active { color: #fff; }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--accent-emerald);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    transform-origin: right;
+  }
+  .nav-links a:hover::after, .nav-links a.active::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .nav-actions { display: flex; gap: 12px; }
+  
+  .mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  /* Hero Section */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: var(--nav-h);
+  }
+  .hero-content {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .hero-text-content { z-index: 2; }
+  
+  .hero h1 {
+    font-size: clamp(2.8rem, 5.5vw, 5.2rem);
+    line-height: 1.1;
+    margin-bottom: 24px;
+    font-family: 'Sora', sans-serif;
+  }
+  .hero-desc {
+    font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+    color: var(--text-muted);
+    max-width: 600px;
+    margin-bottom: 40px;
+    font-weight: 300;
+  }
+  .hero-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+  
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 32px;
+  }
+  .stat-item h4 { font-size: 2rem; color: var(--accent-emerald); margin-bottom: 4px; font-family: 'Sora', sans-serif; }
+  .stat-item p { font-size: 0.85rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; }
+
+  /* Premium Image Card */
+  .hero-visual {
+    position: relative;
+    perspective: 1000px;
+  }
+  .hero-card {
+    background: rgba(20, 15, 35, 0.4);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 16px;
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(24px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+    transform-style: preserve-3d;
+    transition: transform 0.1s;
+    position: relative;
+  }
+  .hero-card::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(135deg, var(--accent-emerald), transparent 50%, var(--accent-purple));
+    border-radius: calc(var(--radius-lg) + 2px);
+    z-index: -1;
+    opacity: 0.3;
+    filter: blur(12px);
+  }
+  .hero-image-wrap {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 1/1.1;
+    background: #0a0815;
+  }
+  .hero-image-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-md);
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 100%, transparent 40%, rgba(3,2,8,0.55) 100%),
+      radial-gradient(ellipse 110% 40% at 50% 0%,  rgba(3,2,8,0.70) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 100% at 0%  50%,  rgba(3,2,8,0.55) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 100% at 100% 50%, rgba(3,2,8,0.55) 0%, transparent 70%),
+      linear-gradient(160deg, rgba(125,42,232,0.12) 0%, rgba(0,210,255,0.08) 100%);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    z-index: 1;
+    transition: opacity 0.5s ease;
+  }
+  .hero-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: contrast(1.08) saturate(0.88) brightness(0.82);
+    transition: transform 0.5s ease, filter 0.5s ease;
+    position: relative;
+    z-index: 0;
+  }
+  .hero-card:hover .hero-image-wrap img {
+    transform: scale(1.05);
+    filter: contrast(1.1) saturate(0.95) brightness(0.88);
+  }
+  .hero-card:hover .hero-image-wrap::after { opacity: 0.85; }
+  
+  .card-floating-badge {
+    position: absolute;
+    bottom: -20px;
+    left: -20px;
+    background: rgba(10, 8, 20, 0.9);
+    border: 1px solid var(--accent-emerald);
+    padding: 16px 24px;
+    border-radius: var(--radius-md);
+    backdrop-filter: blur(10px);
+    transform: translateZ(40px);
+    box-shadow: var(--glow-emerald);
+  }
+  .card-floating-badge p {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent-emerald);
+    margin-bottom: 4px;
+  }
+  .card-floating-badge h4 { font-size: 1.1rem; margin: 0; font-family: 'Sora', sans-serif; }
+
+  /* About / Story */
+  .story-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 32px;
+  }
+  .story-panel p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    margin-bottom: 24px;
+  }
+  .list-premium {
+    display: grid;
+    gap: 16px;
+  }
+  .list-premium li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.98rem;
+    color: var(--text-main);
+  }
+  .list-premium li::before {
+    content: "✦";
+    color: var(--accent-purple);
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+
+  /* Skills Matrix */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .skill-card {
+    border-color: rgba(255,255,255,0.04);
+  }
+  .skill-card:hover {
+    border-color: rgba(125, 42, 232, 0.5);
+    transform: translateY(-5px);
+    box-shadow: var(--glow-purple);
+  }
+  .skill-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .skill-header h3 { margin: 0; font-size: 1.25rem; font-family: 'Sora', sans-serif; }
+  .skill-level {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent-cyan);
+    background: rgba(0, 210, 255, 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  .skill-bar {
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 99px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .skill-progress {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+    border-radius: 99px;
+    width: 0%;
+  }
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* ===================================================
+     FEATURED PROJECTS & LIVE DEMOS SHOWCASE
+     =================================================== */
+  .projects-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(125, 42, 232, 0.08);
+    border: 1px solid rgba(125, 42, 232, 0.2);
+    border-radius: var(--radius-md);
+    padding: 16px 24px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .projects-banner-stats {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .banner-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  .pulse-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-emerald);
+    box-shadow: 0 0 10px var(--accent-emerald);
+    position: relative;
+  }
+  .pulse-indicator::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid var(--accent-emerald);
+    animation: pulseRing 1.8s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+  }
+  @keyframes pulseRing {
+    0% { transform: scale(0.6); opacity: 1; }
+    100% { transform: scale(2.2); opacity: 0; }
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 36px;
+  }
+  @media (max-width: 480px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .project-card {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    border-color: rgba(255,255,255,0.06);
+    background: rgba(14, 11, 28, 0.55);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+  }
+  .project-card:hover {
+    border-color: rgba(0, 255, 170, 0.4);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), var(--glow-emerald);
+    transform: translateY(-6px);
+  }
+
+  /* Browser Mockup Chrome */
+  .card-browser-chrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    background: rgba(10, 8, 20, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    user-select: none;
+  }
+  .traffic-lights {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .traffic-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .dot-red { background: #ff5f56; }
+  .dot-yellow { background: #ffbd2e; }
+  .dot-green { background: #27c93f; }
+
+  .browser-url-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 4px 14px;
+    border-radius: 99px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .browser-url-pill svg { color: var(--accent-emerald); flex-shrink: 0; }
+  .browser-url-pill span { overflow: hidden; text-overflow: ellipsis; }
+
+  .card-browser-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent-emerald);
+    background: rgba(0, 255, 170, 0.08);
+    border: 1px solid rgba(0, 255, 170, 0.2);
+    padding: 3px 8px;
+    border-radius: 99px;
+  }
+
+  /* Live Preview Viewport */
+  .card-preview-viewport {
+    position: relative;
+    height: 250px;
+    background: #080614;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  /* Preview Iframe - scaled to simulate a clean view */
+  .preview-iframe {
+    width: 142.85%;
+    height: 142.85%;
+    border: none;
+    transform: scale(0.7);
+    transform-origin: top left;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    opacity: 0;
+    background: #0d0b1a;
+  }
+  .preview-iframe.loaded {
+    opacity: 1;
+  }
+  .preview-iframe.interactive {
+    pointer-events: auto !important;
+  }
+
+  /* Preview Loader Skeleton */
+  .preview-skeleton {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(20, 15, 35, 0.8), rgba(10, 8, 20, 0.9));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    z-index: 2;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+  .preview-skeleton.hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .loader-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top-color: var(--accent-emerald);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Interactive Shield Overlay */
+  .preview-shield {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(3, 2, 8, 0.25) 0%, rgba(3, 2, 8, 0.82) 100%);
+    backdrop-filter: blur(2px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    z-index: 3;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  .preview-shield.unlocked {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .shield-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .btn-shield-interact {
+    background: rgba(10, 8, 20, 0.9);
+    border: 1px solid var(--accent-emerald);
+    color: var(--accent-emerald);
+    padding: 8px 18px;
+    border-radius: 99px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 15px rgba(0, 255, 170, 0.15);
+  }
+  .btn-shield-interact:hover {
+    background: var(--accent-emerald);
+    color: #000;
+    transform: scale(1.04);
+    box-shadow: var(--glow-emerald);
+  }
+
+  .btn-shield-modal {
+    background: rgba(125, 42, 232, 0.25);
+    border: 1px solid var(--accent-cyan);
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 99px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.25s ease;
+  }
+  .btn-shield-modal:hover {
+    background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+    transform: scale(1.04);
+  }
+
+  /* Floating Lock Button for Active Cards */
+  .preview-lock-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 5;
+    background: rgba(10, 8, 20, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    padding: 6px 12px;
+    border-radius: 99px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    transition: all 0.2s;
+  }
+  .preview-lock-btn:hover {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+  }
+  .preview-lock-btn.visible {
+    display: inline-flex;
+  }
+
+  /* Card Body Content */
+  .project-body {
+    padding: 32px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .project-category-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .project-type-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent-cyan);
+    background: rgba(0, 210, 255, 0.1);
+    padding: 4px 10px;
+    border-radius: 99px;
+    border: 1px solid rgba(0, 210, 255, 0.2);
+  }
+  .project-uptime-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent-emerald);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .project-title {
+    font-size: 1.5rem;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #fff;
+  }
+  .project-tagline {
+    font-size: 0.9rem;
+    color: var(--accent-emerald);
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  .project-desc {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex: 1;
+  }
+
+  /* Highlights bullet list */
+  .project-highlights {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 14px 16px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+  }
+  .highlight-item {
+    font-size: 0.85rem;
+    color: var(--text-main);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.4;
+  }
+  .highlight-item svg {
+    color: var(--accent-emerald);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* Tech Stack Chips */
+  .tech-stack {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+
+  /* Action Buttons */
+  .project-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .project-actions .btn {
+    flex: 1;
+    min-width: 110px;
+  }
+
+  /* ===================================================
+     INTERACTIVE DEVICE SIMULATOR MODAL
+     =================================================== */
+  .demo-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    padding: 20px;
+  }
+  .demo-modal.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  .demo-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 2, 8, 0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .demo-modal-dialog {
+    position: relative;
+    z-index: 2001;
+    width: 100%;
+    max-width: 1320px;
+    height: 90vh;
+    background: #0b0918;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), 0 0 40px rgba(125, 42, 232, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: scale(0.96);
+    transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+  .demo-modal.active .demo-modal-dialog {
+    transform: scale(1);
+  }
+
+  /* Modal Header */
+  .demo-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: rgba(14, 11, 26, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .modal-title-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .modal-url-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 99px;
+    padding: 6px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  .modal-url-box svg { color: var(--accent-emerald); }
+  .modal-url-text { color: #fff; font-weight: 500; }
+
+  /* Viewport Switcher */
+  .viewport-switcher {
+    display: flex;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 99px;
+    padding: 3px;
+    gap: 4px;
+  }
+  .viewport-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 6px 14px;
+    border-radius: 99px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .viewport-btn:hover { color: #fff; }
+  .viewport-btn.active {
+    background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+    color: #fff;
+    box-shadow: 0 2px 10px rgba(125, 42, 232, 0.4);
+  }
+
+  /* Modal Header Actions */
+  .modal-action-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .modal-icon-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .modal-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border-color: var(--accent-cyan);
+  }
+  .modal-close-btn {
+    background: rgba(255, 80, 80, 0.15);
+    border-color: rgba(255, 80, 80, 0.3);
+    color: #ff7777;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+  .modal-close-btn:hover {
+    background: #ff5f56;
+    color: #fff;
+    border-color: #ff5f56;
+  }
+
+  /* Modal Body / Device Frame */
+  .demo-modal-body {
+    flex: 1;
+    background: #06040d;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+  }
+  .device-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+  .device-frame {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    transition: width 0.35s ease, max-width 0.35s ease, border-radius 0.35s ease, border 0.35s ease;
+  }
+  /* Viewport Size Modifiers */
+  .device-frame.view-desktop {
+    max-width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .device-frame.view-tablet {
+    max-width: 768px;
+    height: 95%;
+    border-radius: 28px;
+    border: 12px solid #1c1830;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.1), 0 25px 50px rgba(0,0,0,0.9);
+  }
+  .device-frame.view-mobile {
+    max-width: 390px;
+    height: 95%;
+    border-radius: 40px;
+    border: 12px solid #1c1830;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.1), 0 25px 50px rgba(0,0,0,0.9);
+  }
+  /* Mobile Dynamic Island / Notch */
+  .device-notch {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 110px;
+    height: 24px;
+    background: #1c1830;
+    border-radius: 99px;
+    z-index: 10;
+    display: none;
+  }
+  .device-frame.view-mobile .device-notch {
+    display: block;
+  }
+
+  .modal-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #0c0919;
+  }
+  .modal-loader {
+    position: absolute;
+    inset: 0;
+    background: #090714;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    z-index: 5;
+    transition: opacity 0.3s ease;
+  }
+  .modal-loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /* Timeline (Experience & Education) */
+  .timeline-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+  }
+  .timeline {
+    border-left: 2px solid rgba(255,255,255,0.05);
+    padding-left: 32px;
+    margin-left: 16px;
+  }
+  .t-item {
+    position: relative;
+    margin-bottom: 48px;
+  }
+  .t-item::before {
+    content: '';
+    position: absolute;
+    left: -41px;
+    top: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--bg-base);
+    border: 2px solid var(--accent-emerald);
+    box-shadow: 0 0 10px rgba(0, 255, 170, 0.4);
+    transition: all 0.3s ease;
+  }
+  .t-item:hover::before {
+    background: var(--accent-emerald);
+    transform: scale(1.2);
+  }
+  .t-date {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--accent-cyan);
+    margin-bottom: 8px;
+    background: rgba(0, 210, 255, 0.1);
+    padding: 4px 12px;
+    border-radius: 99px;
+  }
+  .t-title { font-size: 1.25rem; margin-bottom: 4px; font-family: 'Sora', sans-serif; }
+  .t-org { color: var(--text-muted); font-size: 1rem; margin-bottom: 16px; }
+
+  /* Contact & Form */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+  .form-group { margin-bottom: 24px; }
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .form-control {
+    width: 100%;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    color: var(--text-main);
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  .form-control:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+    box-shadow: inset 0 0 0 1px var(--accent-purple), var(--glow-purple);
+    background: rgba(0,0,0,0.4);
+  }
+  textarea.form-control { min-height: 150px; resize: vertical; }
+
+  .contact-info { display: flex; flex-direction: column; gap: 32px; }
+  .info-block h4 { font-size: 1.1rem; color: var(--accent-cyan); margin-bottom: 8px; font-family: 'Sora', sans-serif; }
+  .info-block p, .info-block a { color: var(--text-muted); font-size: 1rem; transition: color 0.3s; }
+  .info-block a:hover { color: var(--text-main); }
+  
+  .map-container {
+    width: 100%;
+    height: 200px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  
+  /* Footer */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--text-muted);
+  }
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+  }
+
+  /* AI Chat UI */
+  #chatToggle {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+    border: none;
+    color: #fff;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(125, 42, 232, 0.3);
+    z-index: 1000;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #chatToggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 15px 40px rgba(125, 42, 232, 0.5);
+  }
+
+  #chatPanel {
+    position: fixed;
+    bottom: 110px;
+    right: 32px;
+    width: 420px;
+    height: 620px;
+    max-height: calc(100vh - 140px);
+    background: rgba(10, 8, 20, 0.88);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-lg);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px) scale(0.95);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-origin: bottom right;
+  }
+  #chatPanel.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+  }
+
+  .chat-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, rgba(125, 42, 232, 0.05), transparent);
+  }
+  .chat-header h3 { margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; font-family: 'Sora', sans-serif; }
+  .chat-header h3::before { content: ''; width: 10px; height: 10px; background: var(--accent-emerald); border-radius: 50%; box-shadow: 0 0 10px var(--accent-emerald); }
+  .chat-controls button {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.875rem;
+    padding: 4px 8px;
+    transition: color 0.2s;
+  }
+  .chat-controls button:hover { color: #fff; }
+
+  .chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .chat-msg {
+    max-width: 88%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    position: relative;
+    animation: slideUp 0.3s ease forwards;
+  }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  
+  .msg-bot {
+    align-self: flex-start;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-bottom-left-radius: 4px;
+  }
+  .msg-bot a {
+    color: var(--accent-cyan);
+    text-decoration: underline;
+    font-weight: 500;
+  }
+  .msg-user {
+    align-self: flex-end;
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+    color: #fff;
+    border-bottom-right-radius: 4px;
+  }
+  .msg-time {
+    display: block;
+    font-size: 0.65rem;
+    font-family: 'JetBrains Mono', monospace;
+    opacity: 0.6;
+    margin-top: 4px;
+    text-align: right;
+  }
+
+  .chat-chips {
+    padding: 0 20px 16px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .chat-chips::-webkit-scrollbar { display: none; }
+  .chat-chips button {
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-muted);
+    padding: 6px 12px;
+    border-radius: 99px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .chat-chips button:hover { background: rgba(0, 210, 255, 0.1); border-color: var(--accent-cyan); color: var(--text-main); }
+
+  .chat-input-area {
+    padding: 16px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    gap: 12px;
+    background: rgba(0,0,0,0.1);
+  }
+  .chat-input-area input {
+    flex: 1;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 99px;
+    padding: 12px 16px;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+  }
+  .chat-input-area input:focus { outline: none; border-color: var(--accent-purple); }
+  .chat-input-area button {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--accent-emerald);
+    border: none;
+    color: #000;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+  }
+  .chat-input-area button:hover { transform: scale(1.1); }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .hero-content { grid-template-columns: 1fr; text-align: center; }
+    .hero-buttons { justify-content: center; }
+    .hero-stats { justify-content: center; }
+    .hero-visual { max-width: 500px; margin: 0 auto; }
+    .timeline-section { grid-template-columns: 1fr; }
+    .story-grid { grid-template-columns: 1fr; }
+    .projects-grid { grid-template-columns: 1fr; }
+  }
+  
+  @media (max-width: 768px) {
+    .nav-links, .nav-actions { display: none; }
+    .mobile-toggle { display: block; }
+    .contact-grid { grid-template-columns: 1fr; }
+    #chatPanel { width: calc(100% - 32px); right: 16px; bottom: 100px; }
+    .demo-modal-dialog { height: 95vh; padding: 0; }
+    .demo-modal-header { flex-direction: column; align-items: stretch; gap: 12px; }
+    .viewport-switcher { justify-content: center; }
+    .modal-action-group { justify-content: flex-end; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Background Elements -->
+<div class="ambient-glow glow-1"></div>
+<div class="ambient-glow glow-2"></div>
+<div class="ambient-glow glow-3"></div>
+<div id="canvas-container"></div>
+
+<!-- Navigation -->
+<header id="header">
+  <div class="nav-container">
+    <a href="#top" class="logo">M<span>.</span>Aqib</a>
+    <nav class="nav-links">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects &amp; Demos</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="#projects" class="btn btn-outline" style="padding: 8px 18px; font-size: 0.8rem;">Live Demos</a>
+      <a href="#contact" class="btn btn-primary" style="padding: 8px 18px; font-size: 0.8rem;">Hire Me</a>
+    </div>
+    <button class="mobile-toggle" id="mobileMenuBtn" aria-label="Toggle Navigation Menu">☰</button>
+  </div>
+</header>
+
+<main>
+  <!-- Hero Section -->
+  <section class="hero" id="top">
+    <div class="wrap">
+      <div class="hero-content">
+        <div class="hero-text-content">
+          <div class="eyebrow">Web &amp; Mobile Engineer</div>
+          <h1>Crafting production systems with modern architecture.</h1>
+          <p class="hero-desc">
+            Hi, I'm Muhammad Aqib. I build high-performance full-stack web applications and cross-platform mobile experiences using React, Next.js, Flutter, Node.js, and Supabase.
+          </p>
+          <div class="hero-buttons">
+            <a href="#projects" class="btn btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Explore Live Demos
+            </a>
+            <a href="https://github.com/10-aqib" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              GitHub Profile
+            </a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <h4>4+</h4>
+              <p>Vercel Live Apps</p>
+            </div>
+            <div class="stat-item">
+              <h4>17</h4>
+              <p>GitHub Repos</p>
+            </div>
+            <div class="stat-item">
+              <h4>100%</h4>
+              <p>Interactive Previews</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="hero-visual">
+          <div class="hero-card tilt-element">
+            <div class="hero-image-wrap">
+              <img src="assets/WhatsApp Image 2026-07-21 at 8.41.50 AM.jpeg" alt="Muhammad Aqib">
+            </div>
+            <div class="card-floating-badge">
+              <p>Current Status</p>
+              <h4>Open to Work</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about">
+    <div class="wrap">
+      <div class="section-header gsap-reveal">
+        <div class="eyebrow">Background</div>
+        <h2>Engineering reliable digital products.</h2>
+      </div>
+      
+      <div class="story-grid">
+        <div class="glass-panel story-panel gsap-reveal corner-accent">
+          <p>
+            I am a full-stack engineer and BS Information Technology candidate at Bahria University, Islamabad. I focus on developing production-grade web applications and high-fidelity mobile solutions with scalable architectures, real-time sync, and fluid animations.
+          </p>
+          <p>
+            Whether engineering peer-to-peer data tools like <strong>1Tap</strong>, building cinematic food ordering systems like <strong>Beef Burger Patties</strong>, or architecting local service networks with <strong>SkillBridge</strong>, I prioritize clean code, user delight, and bulletproof deployments.
+          </p>
+          <ul class="list-premium">
+            <li>Designing full-stack reactive applications using TypeScript, React, Next.js, and Supabase.</li>
+            <li>Crafting high-fidelity mobile apps using Flutter and Dart with Firebase integrations.</li>
+            <li>Delivering high-uptime deployments on Vercel with modern CI/CD workflows.</li>
+          </ul>
+        </div>
+        
+        <div class="glass-panel gsap-reveal">
+          <h3 style="margin-bottom: 20px; font-size: 1.25rem; font-family: 'Sora', sans-serif;">Core Principles</h3>
+          <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div>
+              <h4 style="color: var(--accent-emerald); font-size: 1rem; margin-bottom: 4px;">Zero Fluff, Real Products</h4>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">Every project featured in my portfolio is a fully working, deployed web application you can test and interact with live.</p>
+            </div>
+            <div>
+              <h4 style="color: var(--accent-cyan); font-size: 1rem; margin-bottom: 4px;">Cinematic UI &amp; Performance</h4>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">Leveraging GSAP, Framer Motion, and Tailwind CSS to create polished micro-interactions without compromising speed.</p>
+            </div>
+            <div>
+              <h4 style="color: var(--accent-purple); font-size: 1rem; margin-bottom: 4px;">Scalable Backend &amp; Real-time</h4>
+              <p style="color: var(--text-muted); font-size: 0.9rem;">Utilizing Supabase Realtime, PostgreSQL, Storage, and Node.js for low-latency, scalable state synchronization.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section id="skills">
+    <div class="wrap">
+      <div class="section-header gsap-reveal">
+        <div class="eyebrow">Core Capabilities</div>
+        <h2>Technical Architecture</h2>
+      </div>
+      
+      <div class="skills-grid">
+        <!-- Frontend -->
+        <div class="glass-panel skill-card gsap-reveal">
+          <div class="skill-header">
+            <h3>Frontend</h3>
+            <span class="skill-level">Advanced</span>
+          </div>
+          <div class="skill-bar"><div class="skill-progress" data-width="92%"></div></div>
+          <div class="skill-tags">
+            <span class="chip">React 18</span>
+            <span class="chip">Next.js 15</span>
+            <span class="chip">TypeScript</span>
+            <span class="chip">Tailwind CSS</span>
+            <span class="chip">GSAP</span>
+            <span class="chip">Framer Motion</span>
+          </div>
+        </div>
+        
+        <!-- Backend & Real-time -->
+        <div class="glass-panel skill-card gsap-reveal">
+          <div class="skill-header">
+            <h3>Backend &amp; Cloud</h3>
+            <span class="skill-level">Proficient</span>
+          </div>
+          <div class="skill-bar"><div class="skill-progress" data-width="86%"></div></div>
+          <div class="skill-tags">
+            <span class="chip">Supabase</span>
+            <span class="chip">Node.js</span>
+            <span class="chip">Express</span>
+            <span class="chip">PostgreSQL</span>
+            <span class="chip">Realtime Sync</span>
+            <span class="chip">Vercel</span>
+          </div>
+        </div>
+
+        <!-- Mobile -->
+        <div class="glass-panel skill-card gsap-reveal">
+          <div class="skill-header">
+            <h3>Mobile &amp; Systems</h3>
+            <span class="skill-level">Advanced</span>
+          </div>
+          <div class="skill-bar"><div class="skill-progress" data-width="88%"></div></div>
+          <div class="skill-tags">
+            <span class="chip">Flutter</span>
+            <span class="chip">Dart</span>
+            <span class="chip">Firebase</span>
+            <span class="chip">Tauri</span>
+            <span class="chip">D3.js</span>
+            <span class="chip">State Management</span>
+          </div>
+        </div>
+        
+        <!-- Tooling & Architecture -->
+        <div class="glass-panel skill-card gsap-reveal">
+          <div class="skill-header">
+            <h3>Tools &amp; State</h3>
+            <span class="skill-level">Proficient</span>
+          </div>
+          <div class="skill-bar"><div class="skill-progress" data-width="84%"></div></div>
+          <div class="skill-tags">
+            <span class="chip">Zustand</span>
+            <span class="chip">TanStack Router</span>
+            <span class="chip">Git / GitHub</span>
+            <span class="chip">Vite</span>
+            <span class="chip">REST APIs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Projects & Live Demos Section -->
+  <section id="projects">
+    <div class="wrap">
+      <div class="section-header gsap-reveal">
+        <div class="eyebrow">Production Applications</div>
+        <h2>Featured Projects &amp; Live Demos</h2>
+        <p class="section-subtitle">
+          Real, deployed web applications on Vercel with verified uptime. Interact directly inside each card, or click <strong>Live Demo</strong> to launch the interactive device simulator.
+        </p>
+      </div>
+
+      <div class="projects-banner gsap-reveal">
+        <div class="projects-banner-stats">
+          <div class="banner-stat">
+            <span class="pulse-indicator"></span>
+            <span><strong>4</strong> Production Apps Live on Vercel</span>
+          </div>
+          <div class="banner-stat">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--accent-cyan)"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            <span>HTTP 200 OK • Zero Mockups</span>
+          </div>
+          <div class="banner-stat">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--accent-purple)"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            <span>Responsive Device Simulator Active</span>
+          </div>
+        </div>
+        <div>
+          <span class="chip" style="background: rgba(0, 255, 170, 0.1); border-color: var(--accent-emerald); color: var(--accent-emerald);">
+            ✦ Click to test live apps directly
+          </span>
+        </div>
+      </div>
+      
+      <div class="projects-grid">
+        <!-- Project 1: Beef Burger Patties -->
+        <article class="glass-panel project-card gsap-reveal tilt-element" data-project-id="beef-burger">
+          <div class="card-browser-chrome">
+            <div class="traffic-lights">
+              <span class="traffic-dot dot-red"></span>
+              <span class="traffic-dot dot-yellow"></span>
+              <span class="traffic-dot dot-green"></span>
+            </div>
+            <div class="browser-url-pill">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>beef-burger-patties.vercel.app</span>
+            </div>
+            <div class="card-browser-badge">
+              <span class="pulse-indicator"></span> Live
+            </div>
+          </div>
+
+          <div class="card-preview-viewport">
+            <div class="preview-skeleton" id="skeleton-beef-burger">
+              <div class="loader-spinner"></div>
+              <span>Connecting to live deployment...</span>
+            </div>
+            <iframe 
+              class="preview-iframe" 
+              id="iframe-beef-burger"
+              data-src="https://beef-burger-patties.vercel.app" 
+              loading="lazy" 
+              title="Live demo of Beef Burger Patties" 
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals">
+            </iframe>
+            <div class="preview-shield" id="shield-beef-burger">
+              <div class="shield-actions">
+                <button type="button" class="btn-shield-interact" data-interact-target="beef-burger">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                  <span>Interact Inside Card</span>
+                </button>
+                <button type="button" class="btn-shield-modal" data-demo-target="beef-burger">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                  <span>Device Simulator</span>
+                </button>
+              </div>
+            </div>
+            <button type="button" class="preview-lock-btn" id="lock-beef-burger" data-lock-target="beef-burger">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>Lock Page Scroll</span>
+            </button>
+          </div>
+
+          <div class="project-body">
+            <div class="project-category-row">
+              <span class="project-type-tag">Full-Stack E-Commerce</span>
+              <span class="project-uptime-tag"><span class="pulse-indicator"></span> 200 OK</span>
+            </div>
+            <h3 class="project-title">Beef Burger Patties</h3>
+            <p class="project-tagline">Cinematic Restaurant &amp; Online Ordering Web App</p>
+            <p class="project-desc">
+              A premium, modern burger restaurant web application designed for customers in Pakistan. Features a dark-themed cinematic food interface, GSAP micro-animations, interactive topping customizer with kitchen notes, cart management, and multi-branch location discovery.
+            </p>
+            
+            <div class="project-highlights">
+              <div class="highlight-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Interactive burger customizer with dynamic topping modifiers</span>
+              </div>
+              <div class="highlight-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Complete cart lifecycle, deals, kitchen instructions &amp; checkout</span>
+              </div>
+              <div class="highlight-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Location discovery across Pakistan branches with maps</span>
+              </div>
+            </div>
+
+            <div class="tech-stack">
+              <span class="chip">React</span>
+              <span class="chip">TypeScript</span>
+              <span class="chip">GSAP</span>
+              <span class="chip">Framer Motion</span>
+              <span class="chip">Zustand</span>
+              <span class="chip">Supabase</span>
+              <span class="chip">Tailwind CSS</span>
+            </div>
+
+            <div class="project-actions">
+              <button type="button" class="btn btn-primary btn-sm" data-demo-target="beef-burger">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Live Demo
+              </button>
+              <a href="https://beef-burger-patties.vercel.app" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                Visit Site
+              </a>
+              <a href="https://github.com/10-aqib/Beef-Burger-Patties" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                Source
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 2: 1Tap -->
+        <article class="glass-panel project-card gsap-reveal tilt-element" data-project-id="1tap">
+          <div class="card-browser-chrome">
+            <div class="traffic-lights">
+              <span class="traffic-dot dot-red"></span>
+              <span class="traffic-dot dot-yellow"></span>
+              <span class="traffic-dot dot-green"></span>
+            </div>
+            <div class="browser-url-pill">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>1tap-theta.vercel.app</span>
+            </div>
+            <div class="card-browser-badge">
+              <span class="pulse-indicator"></span> Live
+            </div>
+          </div>
+
+          <div class="card-preview-viewport">
+            <div class="preview-skeleton" id="skeleton-1tap">
+              <div class="loader-spinner"></div>
+              <span>Connecting to live deployment...</span>
+            </div>
+            <iframe 
+              class="preview-iframe" 
+              id="iframe-1tap"
+              data-src="https://1tap-theta.vercel.app" 
+              loading="lazy" 
+              title="Live demo of 1Tap" 
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals">
+            </iframe>
+            <div class="preview-shield" id="shield-1tap">
+              <div class="shield-actions">
+                <button type="button" class="btn-shield-interact" data-interact-target="1tap">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                  <span>Interact Inside Card</span>
+                </button>
+                <button type="button" class="btn-shield-modal" data-demo-target="1tap">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                  <span>Device Simulator</span>
+                </button>
+              </div>
+            </div>
+            <button type="button" class="preview-lock-btn" id="lock-1tap" data-lock-target="1tap">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>Lock Page Scroll</span>
+            </button>
+          </div>
+
+          <div class="project-body">
+            <div class="project-category-row">
+              <span class="project-type-tag">Real-Time P2P Sharing</span>
+              <span class="project-uptime-tag"><span class="pulse-indicator"></span> 200 OK</span>
+            </div>
+            <h3 class="project-title">1Tap</h3>
+            <p class="project-tagline">Instant Cross-Device File, Text &amp; Link Sharing</p>
+            <p class="project-desc">
+              Zero-signup peer-to-peer sharing tool allowing users to temporarily connect devices and share text, URLs, and files in real time. Features 6-digit room codes, QR pairing, live presence counters, and auto-expiring temporary rooms for privacy.
+            </p>
+            
+            <div class="project-highlights">
+              <div class="highlight-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Zero accounts required; pair instantly via 6-digit code or QR</span>
+              </div>
+              <div class="highlight-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Real-time presence &amp; bidirectional sync via Supabase Realtime</span>
+              </div>
+              <div class="highlight-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Up to 100MB file transfers with configurable room expiration</span>
+              </div>
+            </div>
+
+            <div class="tech-stack">
+              <span class="chip">React</span>
+              <span class="chip">TypeScript</span>
+              <span class="chip">Supabase Realtime</span>
+              <span class="chip">TanStack Router</span>
+              <span class="chip">Tailwind CSS</span>
+              <span class="chip">QRCode</span>
+            </div>
+
+            <div class="project-actions">
+              <button type="button" class="btn btn-primary btn-sm" data-demo-target="1tap">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Live Demo
+              </button>
+              <a href="https://1tap-theta.vercel.app" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                Visit Site
+              </a>
+              <a href="https://github.com/10-aqib/1Tap" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                Source
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 3: Space Cleaner -->
+        <article class="glass-panel project-card gsap-reveal tilt-element" data-project-id="cleaner">
+          <div class="card-browser-chrome">
+            <div class="traffic-lights">
+              <span class="traffic-dot dot-red"></span>
+              <span class="traffic-dot dot-yellow"></span>
+              <span class="traffic-dot dot-green"></span>
+            </div>
+            <div class="browser-url-pill">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>space-cleaner.vercel.app</span>
+            </div>
+            <div class="card-browser-badge">
+              <span class="pulse-indicator"></span> Live
+            </div>
+          </div>
+
+          <div class="card-preview-viewport">
+            <div class="preview-skeleton" id="skeleton-cleaner">
+              <div class="loader-spinner"></div>
+              <span>Connecting to live deployment...</span>
+            </div>
+            <iframe 
+              class="preview-iframe" 
+              id="iframe-cleaner"
+              data-src="https://space-cleaner.vercel.app" 
+              loading="lazy" 
+              title="Live demo of Space Cleaner" 
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals">
+            </iframe>
+            <div class="preview-shield" id="shield-cleaner">
+              <div class="shield-actions">
+                <button type="button" class="btn-shield-interact" data-interact-target="cleaner">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                  <span>Interact Inside Card</span>
+                </button>
+                <button type="button" class="btn-shield-modal" data-demo-target="cleaner">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                  <span>Device Simulator</span>
+                </button>
+              </div>
+            </div>
+            <button type="button" class="preview-lock-btn" id="lock-cleaner" data-lock-target="cleaner">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>Lock Page Scroll</span>
+            </button>
+          </div>
+
+          <div class="project-body">
+            <div class="project-category-row">
+              <span class="project-type-tag">Storage Intelligence</span>
+              <span class="project-uptime-tag"><span class="pulse-indicator"></span> 200 OK</span>
+            </div>
+            <h3 class="project-title">Space Cleaner</h3>
+            <p class="project-tagline">Duplicate, Unused &amp; Heavy File Disk Analyzer</p>
+            <p class="project-desc">
+              High-performance storage intelligence tool designed to detect duplicate, unused, and heavy files consuming valuable disk space. Features interactive D3 storage visualizers, virtualized file lists, command palette, and one-tap cleanup workflows.
+            </p>
+            
+            <div class="project-highlights">
+              <div class="highlight-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Interactive D3.js &amp; Recharts storage treemaps &amp; breakdown</span>
+              </div>
+              <div class="highlight-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Virtualized high-speed file browser via TanStack Virtual</span>
+              </div>
+              <div class="highlight-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Keyboard command palette, dark/light themes &amp; one-tap erase</span>
+              </div>
+            </div>
+
+            <div class="tech-stack">
+              <span class="chip">React</span>
+              <span class="chip">TypeScript</span>
+              <span class="chip">Vite</span>
+              <span class="chip">D3.js</span>
+              <span class="chip">Recharts</span>
+              <span class="chip">TanStack Virtual</span>
+              <span class="chip">Zustand</span>
+              <span class="chip">Tauri Architecture</span>
+            </div>
+
+            <div class="project-actions">
+              <button type="button" class="btn btn-primary btn-sm" data-demo-target="cleaner">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Live Demo
+              </button>
+              <a href="https://space-cleaner.vercel.app" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                Visit Site
+              </a>
+              <a href="https://github.com/10-aqib/Cleaner" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                Source
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 4: SkillBridge -->
+        <article class="glass-panel project-card gsap-reveal tilt-element" data-project-id="skillbridge">
+          <div class="card-browser-chrome">
+            <div class="traffic-lights">
+              <span class="traffic-dot dot-red"></span>
+              <span class="traffic-dot dot-yellow"></span>
+              <span class="traffic-dot dot-green"></span>
+            </div>
+            <div class="browser-url-pill">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>website-seven-sand-21.vercel.app</span>
+            </div>
+            <div class="card-browser-badge">
+              <span class="pulse-indicator"></span> Live
+            </div>
+          </div>
+
+          <div class="card-preview-viewport">
+            <div class="preview-skeleton" id="skeleton-skillbridge">
+              <div class="loader-spinner"></div>
+              <span>Connecting to live deployment...</span>
+            </div>
+            <iframe 
+              class="preview-iframe" 
+              id="iframe-skillbridge"
+              data-src="https://website-seven-sand-21.vercel.app" 
+              loading="lazy" 
+              title="Live demo of SkillBridge" 
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals">
+            </iframe>
+            <div class="preview-shield" id="shield-skillbridge">
+              <div class="shield-actions">
+                <button type="button" class="btn-shield-interact" data-interact-target="skillbridge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                  <span>Interact Inside Card</span>
+                </button>
+                <button type="button" class="btn-shield-modal" data-demo-target="skillbridge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                  <span>Device Simulator</span>
+                </button>
+              </div>
+            </div>
+            <button type="button" class="preview-lock-btn" id="lock-skillbridge" data-lock-target="skillbridge">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>Lock Page Scroll</span>
+            </button>
+          </div>
+
+          <div class="project-body">
+            <div class="project-category-row">
+              <span class="project-type-tag">Full-Stack Platform &amp; Mobile</span>
+              <span class="project-uptime-tag"><span class="pulse-indicator"></span> 200 OK</span>
+            </div>
+            <h3 class="project-title">SkillBridge</h3>
+            <p class="project-tagline">On-Demand Local Skilled Workers &amp; Mentorship Platform</p>
+            <p class="project-desc">
+              A comprehensive platform bridging skill discovery and everyday service gaps by connecting communities with verified local skilled workers and mentors. Includes a high-converting Next.js landing page with interactive showcases and a companion cross-platform Flutter mobile app.
+            </p>
+            
+            <div class="project-highlights">
+              <div class="highlight-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Next.js App Router with SSR, animations &amp; responsive layouts</span>
+              </div>
+              <div class="highlight-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Full-stack companion mobile app built with Flutter &amp; Dart</span>
+              </div>
+              <div class="highlight-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Interactive feature showcase, audience breakdowns &amp; Supabase SSR</span>
+              </div>
+            </div>
+
+            <div class="tech-stack">
+              <span class="chip">Next.js 15</span>
+              <span class="chip">React</span>
+              <span class="chip">TypeScript</span>
+              <span class="chip">Tailwind CSS</span>
+              <span class="chip">Supabase SSR</span>
+              <span class="chip">Flutter (Mobile)</span>
+              <span class="chip">Dart</span>
+            </div>
+
+            <div class="project-actions">
+              <button type="button" class="btn btn-primary btn-sm" data-demo-target="skillbridge">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Live Demo
+              </button>
+              <a href="https://website-seven-sand-21.vercel.app" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                Visit Site
+              </a>
+              <a href="https://github.com/10-aqib/skillBridge-Website" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                Source
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience & Education -->
+  <section id="experience">
+    <div class="wrap">
+      <div class="timeline-section">
+        <!-- Exp -->
+        <div>
+          <div class="section-header left-aligned gsap-reveal">
+            <div class="eyebrow">Career</div>
+            <h2>Experience</h2>
+          </div>
+          <div class="timeline gsap-reveal">
+            <div class="t-item">
+              <span class="t-date">Jan 2023 - Present</span>
+              <h3 class="t-title">Full-Stack &amp; Mobile Engineer</h3>
+              <p class="t-org">Independent &amp; Production Software Development</p>
+              <ul class="list-premium" style="font-size: 0.92rem;">
+                <li>Engineered and deployed 4 production web apps on Vercel with real-time architectures.</li>
+                <li>Implemented reactive databases, Supabase Realtime, and secure authentication.</li>
+                <li>Built cross-platform Flutter applications with Firebase cloud services.</li>
+                <li>Integrated AI features, semantic portfolio assistants, and dynamic customizers.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Edu -->
+        <div>
+          <div class="section-header left-aligned gsap-reveal">
+            <div class="eyebrow">Academia</div>
+            <h2>Education</h2>
+          </div>
+          <div class="timeline gsap-reveal">
+            <div class="t-item">
+              <span class="t-date">2023 - 2027 (Expected)</span>
+              <h3 class="t-title">BS Information Technology</h3>
+              <p class="t-org">Bahria University, Islamabad</p>
+              <ul class="list-premium" style="font-size: 0.92rem;">
+                <li>Focus: Software Engineering, Distributed Databases &amp; Network Systems.</li>
+                <li>Lead developer for multiple departmental full-stack and mobile projects.</li>
+                <li>Consistent academic standing in software and algorithm design.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact">
+    <div class="wrap">
+      <div class="section-header gsap-reveal">
+        <div class="eyebrow">Get In Touch</div>
+        <h2>Let's build something exceptional.</h2>
+        <p class="section-subtitle">Interested in working together or want to discuss an engineering role? Send a message or reach out directly.</p>
+      </div>
+      
+      <div class="contact-grid">
+        <div class="glass-panel gsap-reveal corner-accent">
+          <form id="contactForm">
+            <div class="form-group">
+              <label for="formName">Your Name</label>
+              <input type="text" id="formName" class="form-control" required placeholder="Jane Doe">
+            </div>
+            <div class="form-group">
+              <label for="formEmail">Your Email</label>
+              <input type="email" id="formEmail" class="form-control" required placeholder="jane@example.com">
+            </div>
+            <div class="form-group">
+              <label for="formMessage">Message</label>
+              <textarea id="formMessage" class="form-control" required placeholder="Tell me about your project, team, or opportunity..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              Send Message
+            </button>
+          </form>
+        </div>
+        
+        <div class="gsap-reveal" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div class="contact-info">
+            <div class="info-block">
+              <h4>Email</h4>
+              <a href="mailto:aqibk1051@gmail.com">aqibk1051@gmail.com</a>
+            </div>
+            <div class="info-block">
+              <h4>Phone / WhatsApp</h4>
+              <a href="tel:+923363620708">+92 336 3620708</a>
+            </div>
+            <div class="info-block">
+              <h4>Location &amp; Availability</h4>
+              <p>Islamabad, Pakistan (UTC+5)<br>Available for Remote, Hybrid &amp; On-Site Roles Worldwide</p>
+            </div>
+            <div class="info-block">
+              <h4>Direct Profiles</h4>
+              <div style="display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap;">
+                <a href="https://github.com/10-aqib" target="_blank" rel="noopener noreferrer" class="chip">GitHub: @10-aqib</a>
+                <a href="https://beef-burger-patties.vercel.app" target="_blank" rel="noopener noreferrer" class="chip">Beef Burger Live</a>
+                <a href="https://1tap-theta.vercel.app" target="_blank" rel="noopener noreferrer" class="chip">1Tap Live</a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="map-container" style="margin-top: 24px;">
+            <iframe src="https://www.google.com/maps?q=Islamabad%20Pakistan&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="logo" style="justify-content: center; margin-bottom: 16px;">M<span>.</span>Aqib</div>
+    <p>&copy; <span id="year"></span> Muhammad Aqib. All rights reserved. • Built with modern web architecture &amp; hosted on Vercel.</p>
+    <div class="footer-links">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Live Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="https://github.com/10-aqib" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="mailto:aqibk1051@gmail.com">Email</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================================================
+     INTERACTIVE DEVICE SIMULATOR MODAL
+     =================================================== -->
+<div id="demoModal" class="demo-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+  <div class="demo-backdrop" id="modalBackdrop"></div>
+  <div class="demo-modal-dialog">
+    <div class="demo-modal-header">
+      <div class="modal-title-group">
+        <div class="traffic-lights">
+          <span class="traffic-dot dot-red" id="modalCloseDot" style="cursor: pointer;" title="Close"></span>
+          <span class="traffic-dot dot-yellow"></span>
+          <span class="traffic-dot dot-green"></span>
+        </div>
+        <div class="modal-url-box">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <span id="modalUrlDisplay" class="modal-url-text">https://...</span>
+          <span class="pulse-indicator" style="margin-left: 6px;"></span>
+        </div>
+      </div>
+      
+      <div class="viewport-switcher">
+        <button type="button" class="viewport-btn active" data-viewport="desktop" title="Full Desktop View (100%)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          <span>Desktop</span>
+        </button>
+        <button type="button" class="viewport-btn" data-viewport="tablet" title="Tablet View (768px)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+          <span>Tablet</span>
+        </button>
+        <button type="button" class="viewport-btn" data-viewport="mobile" title="Mobile Phone View (390px)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+          <span>Mobile</span>
+        </button>
+      </div>
+      
+      <div class="modal-action-group">
+        <button type="button" id="modalReload" title="Reload Frame" class="modal-icon-btn" aria-label="Reload App">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+        </button>
+        <button type="button" id="modalCopyUrl" title="Copy Live URL" class="modal-icon-btn" aria-label="Copy Live Link">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        </button>
+        <a id="modalExternalLink" href="#" target="_blank" rel="noopener noreferrer" title="Open Fullscreen Site in New Tab" class="modal-icon-btn" aria-label="Open in New Tab">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+        </a>
+        <button type="button" id="modalCloseBtn" title="Close Live Demo (Esc)" class="modal-icon-btn modal-close-btn" aria-label="Close Live Demo">✕</button>
+      </div>
+    </div>
+    
+    <div class="demo-modal-body">
+      <div class="device-container">
+        <div class="device-frame view-desktop" id="deviceFrame">
+          <div class="device-notch"></div>
+          <div class="modal-loader" id="modalLoader">
+            <div class="loader-spinner"></div>
+            <span>Loading interactive live application...</span>
+          </div>
+          <iframe id="modalIframe" class="modal-iframe" src="" allow="clipboard-read; clipboard-write; geolocation" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================
+     AI CHATBOT ASSISTANT
+     =================================================== -->
+<button id="chatToggle" aria-label="Open AI Assistant">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+</button>
+
+<div id="chatPanel">
+  <div class="chat-header">
+    <h3>Aqib's AI Assistant</h3>
+    <div class="chat-controls">
+      <button id="chatClear">Clear</button>
+      <button id="chatClose">✖</button>
+    </div>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <!-- Messages inject here -->
+  </div>
+  <div class="chat-chips" id="chatChips">
+    <!-- Suggestion chips inject here -->
+  </div>
+  <div class="chat-input-area">
+    <input type="text" id="chatInput" placeholder="Ask about my live projects or skills..." autocomplete="off">
+    <button id="chatSend" aria-label="Send query">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  /* ===================================================
+     THREE.JS INTERACTIVE BACKGROUND
+     =================================================== */
+  const initThreeJS = () => {
+    const container = document.getElementById('canvas-container');
+    if (!container || typeof THREE === 'undefined') return;
+    
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 30;
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    const particlesGeometry = new THREE.BufferGeometry();
+    const particlesCount = 1400;
+    const posArray = new Float32Array(particlesCount * 3);
+
+    for (let i = 0; i < particlesCount * 3; i++) {
+      posArray[i] = (Math.random() - 0.5) * 100;
+    }
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+    const particlesMaterial = new THREE.PointsMaterial({
+      size: 0.15,
+      color: 0x00ffaa,
+      transparent: true,
+      opacity: 0.75,
+      blending: THREE.AdditiveBlending
+    });
+
+    const particleMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+    scene.add(particleMesh);
+
+    const sphereGeo = new THREE.IcosahedronGeometry(15, 2);
+    const sphereMat = new THREE.MeshBasicMaterial({
+      color: 0x7d2ae8,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.14
+    });
+    const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+    scene.add(sphere);
+
+    let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
+    const windowHalfX = window.innerWidth / 2;
+    const windowHalfY = window.innerHeight / 2;
+
+    document.addEventListener('mousemove', (event) => {
+      mouseX = (event.clientX - windowHalfX) * 0.0008;
+      mouseY = (event.clientY - windowHalfY) * 0.0008;
+    });
+
+    const animate = () => {
+      requestAnimationFrame(animate);
+      targetX = mouseX * 0.5;
+      targetY = mouseY * 0.5;
+      
+      particleMesh.rotation.y += 0.0008;
+      particleMesh.rotation.x += 0.0004;
+      
+      sphere.rotation.y += 0.0016;
+      sphere.rotation.x += 0.0008;
+      
+      scene.rotation.y += 0.04 * (targetX - scene.rotation.y);
+      scene.rotation.x += 0.04 * (targetY - scene.rotation.x);
+
+      renderer.render(scene, camera);
+    };
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  };
+
+  initThreeJS();
+
+  /* ===================================================
+     GSAP ANIMATIONS & SCROLL REVEALS
+     =================================================== */
+  if (typeof gsap !== 'undefined') {
+    if (typeof ScrollTrigger !== 'undefined') {
+      gsap.registerPlugin(ScrollTrigger);
+    }
+
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 40) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    gsap.from(".hero-text-content > *", {
+      y: 25,
+      opacity: 0,
+      duration: 0.9,
+      stagger: 0.12,
+      ease: "power3.out",
+      delay: 0.15
+    });
+    
+    gsap.from(".hero-visual", {
+      x: 40,
+      opacity: 0,
+      duration: 1.1,
+      ease: "power3.out",
+      delay: 0.35
+    });
+
+    const revealElements = document.querySelectorAll('.gsap-reveal');
+    revealElements.forEach((el) => {
+      gsap.from(el, {
+        scrollTrigger: {
+          trigger: el,
+          start: "top 88%",
+          toggleActions: "play none none none"
+        },
+        y: 35,
+        opacity: 0,
+        duration: 0.75,
+        ease: "power3.out"
+      });
+    });
+
+    const skillCards = document.querySelectorAll('.skill-card');
+    skillCards.forEach(card => {
+      const bar = card.querySelector('.skill-progress');
+      if (bar) {
+        const width = bar.getAttribute('data-width');
+        gsap.to(bar, {
+          scrollTrigger: {
+            trigger: card,
+            start: "top 88%"
+          },
+          width: width,
+          duration: 1.4,
+          ease: "power3.out",
+          delay: 0.2
+        });
+      }
+    });
+  }
+
+  /* ===================================================
+     3D TILT EFFECT FOR CARDS
+     =================================================== */
+  const tiltElements = document.querySelectorAll('.tilt-element');
+  tiltElements.forEach(el => {
+    el.addEventListener('mousemove', e => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const xPct = (x / rect.width - 0.5) * 12;
+      const yPct = (y / rect.height - 0.5) * -12;
+      el.style.transform = `perspective(1000px) rotateX(${yPct}deg) rotateY(${xPct}deg) scale3d(1.01, 1.01, 1.01)`;
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
+    });
+  });
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ===================================================
+     LIVE PROJECTS DATA & INTERACTIVE PREVIEWS
+     =================================================== */
+  const PROJECTS_CONFIG = {
+    'beef-burger': {
+      title: 'Beef Burger Patties',
+      url: 'https://beef-burger-patties.vercel.app',
+      github: 'https://github.com/10-aqib/Beef-Burger-Patties',
+      displayUrl: 'beef-burger-patties.vercel.app',
+      desc: 'Cinematic food-focused online ordering platform with interactive burger customization, deals, and Pakistan branch discovery.'
+    },
+    '1tap': {
+      title: '1Tap',
+      url: 'https://1tap-theta.vercel.app',
+      github: 'https://github.com/10-aqib/1Tap',
+      displayUrl: '1tap-theta.vercel.app',
+      desc: 'Instant zero-signup cross-device peer-to-peer file, text, and link sharing using Supabase Realtime & QR room pairing.'
+    },
+    'cleaner': {
+      title: 'Space Cleaner',
+      url: 'https://space-cleaner.vercel.app',
+      github: 'https://github.com/10-aqib/Cleaner',
+      displayUrl: 'space-cleaner.vercel.app',
+      desc: 'Storage intelligence tool finding duplicate, unused and large files with D3 storage visualizers and one-tap cleanup.'
+    },
+    'skillbridge': {
+      title: 'SkillBridge',
+      url: 'https://website-seven-sand-21.vercel.app',
+      github: 'https://github.com/10-aqib/skillBridge-Website',
+      displayUrl: 'website-seven-sand-21.vercel.app',
+      desc: 'Modern Next.js platform connecting communities with verified local skilled workers and mentors with companion Flutter app.'
+    }
+  };
+
+  // Lazy load in-card preview iframes when user scrolls near them
+  const cardObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const iframe = entry.target.querySelector('.preview-iframe');
+        const skeleton = entry.target.querySelector('.preview-skeleton');
+        if (iframe && iframe.dataset.src && !iframe.src) {
+          iframe.src = iframe.dataset.src;
+          iframe.onload = () => {
+            iframe.classList.add('loaded');
+            if (skeleton) skeleton.classList.add('hidden');
+          };
+          // Timeout fallback in case load event is silent
+          setTimeout(() => {
+            iframe.classList.add('loaded');
+            if (skeleton) skeleton.classList.add('hidden');
+          }, 3500);
+        }
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: '250px 0px' });
+
+  document.querySelectorAll('.project-card').forEach(card => {
+    cardObserver.observe(card);
+  });
+
+  // In-Card Interaction Unlock/Lock Handlers
+  document.querySelectorAll('.btn-shield-interact').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const targetId = btn.dataset.interactTarget;
+      const shield = document.getElementById(`shield-${targetId}`);
+      const iframe = document.getElementById(`iframe-${targetId}`);
+      const lockBtn = document.getElementById(`lock-${targetId}`);
+      
+      if (shield) shield.classList.add('unlocked');
+      if (iframe) iframe.classList.add('interactive');
+      if (lockBtn) lockBtn.classList.add('visible');
+    });
+  });
+
+  document.querySelectorAll('.preview-lock-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const targetId = btn.dataset.lockTarget;
+      const shield = document.getElementById(`shield-${targetId}`);
+      const iframe = document.getElementById(`iframe-${targetId}`);
+      
+      if (shield) shield.classList.remove('unlocked');
+      if (iframe) iframe.classList.remove('interactive');
+      btn.classList.remove('visible');
+    });
+  });
+
+  /* ===================================================
+     DEVICE SIMULATOR MODAL LOGIC
+     =================================================== */
+  const demoModal = document.getElementById('demoModal');
+  const modalIframe = document.getElementById('modalIframe');
+  const modalUrlDisplay = document.getElementById('modalUrlDisplay');
+  const modalExternalLink = document.getElementById('modalExternalLink');
+  const modalLoader = document.getElementById('modalLoader');
+  const deviceFrame = document.getElementById('deviceFrame');
+  const modalCloseBtn = document.getElementById('modalCloseBtn');
+  const modalCloseDot = document.getElementById('modalCloseDot');
+  const modalBackdrop = document.getElementById('modalBackdrop');
+  const modalReload = document.getElementById('modalReload');
+  const modalCopyUrl = document.getElementById('modalCopyUrl');
+  const viewportBtns = document.querySelectorAll('.viewport-btn');
+
+  let activeProject = null;
+
+  const openDemoModal = (projectId) => {
+    const proj = PROJECTS_CONFIG[projectId];
+    if (!proj) return;
+
+    activeProject = proj;
+    modalUrlDisplay.textContent = proj.url;
+    modalExternalLink.href = proj.url;
+
+    modalLoader.classList.remove('hidden');
+    modalIframe.src = proj.url;
+
+    modalIframe.onload = () => {
+      setTimeout(() => {
+        modalLoader.classList.add('hidden');
+      }, 400);
+    };
+
+    demoModal.classList.add('active');
+    demoModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeDemoModal = () => {
+    demoModal.classList.remove('active');
+    demoModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    // Unload iframe after animation to preserve resources
+    setTimeout(() => {
+      if (!demoModal.classList.contains('active')) {
+        modalIframe.src = '';
+      }
+    }, 300);
+  };
+
+  // Trigger modal from any "Live Demo" or "Device Simulator" button
+  document.querySelectorAll('[data-demo-target]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openDemoModal(btn.dataset.demoTarget);
+    });
+  });
+
+  modalCloseBtn.addEventListener('click', closeDemoModal);
+  modalCloseDot.addEventListener('click', closeDemoModal);
+  modalBackdrop.addEventListener('click', closeDemoModal);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && demoModal.classList.contains('active')) {
+      closeDemoModal();
+    }
+  });
+
+  // Viewport Switcher
+  viewportBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      viewportBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const view = btn.dataset.viewport;
+      deviceFrame.className = `device-frame view-${view}`;
+    });
+  });
+
+  // Reload iframe
+  modalReload.addEventListener('click', () => {
+    if (activeProject) {
+      modalLoader.classList.remove('hidden');
+      modalIframe.src = activeProject.url;
+    }
+  });
+
+  // Copy URL with visual indicator
+  modalCopyUrl.addEventListener('click', () => {
+    if (activeProject) {
+      navigator.clipboard.writeText(activeProject.url).then(() => {
+        const originalText = modalUrlDisplay.textContent;
+        modalUrlDisplay.textContent = 'Copied to clipboard!';
+        modalUrlDisplay.style.color = 'var(--accent-emerald)';
+        setTimeout(() => {
+          modalUrlDisplay.textContent = originalText;
+          modalUrlDisplay.style.color = '#fff';
+        }, 1800);
+      });
+    }
+  });
+
+  /* ===================================================
+     AI CHATBOT ASSISTANT
+     =================================================== */
+  const KB = {
+    identity: {
+      name: "Muhammad Aqib",
+      role: "Web and Mobile Engineer",
+      email: "aqibk1051@gmail.com",
+      phone: "+92 336 3620708",
+      location: "Islamabad, Pakistan"
+    },
+    skills: "React, Next.js, TypeScript, Tailwind CSS, Flutter, Dart, Supabase Realtime, Node.js, Express, PostgreSQL, MongoDB, GSAP.",
+    projects: [
+      {
+        name: "Beef Burger Patties",
+        url: "https://beef-burger-patties.vercel.app",
+        github: "https://github.com/10-aqib/Beef-Burger-Patties",
+        desc: "A premium, modern burger restaurant web application with cinematic food photography, GSAP animations, interactive burger customizer, deals, cart management, and Pakistan branch discovery."
+      },
+      {
+        name: "1Tap",
+        url: "https://1tap-theta.vercel.app",
+        github: "https://github.com/10-aqib/1Tap",
+        desc: "Zero-signup peer-to-peer sharing tool allowing users to connect devices via 6-digit codes or QR codes to share files (up to 100MB), text, and links using Supabase Realtime."
+      },
+      {
+        name: "Space Cleaner",
+        url: "https://space-cleaner.vercel.app",
+        github: "https://github.com/10-aqib/Cleaner",
+        desc: "Storage intelligence tool designed to detect duplicate, unused and heavy files with D3.js and Recharts visualizations, virtualized lists, and one-tap disk space recovery."
+      },
+      {
+        name: "SkillBridge",
+        url: "https://website-seven-sand-21.vercel.app",
+        github: "https://github.com/10-aqib/skillBridge-Website",
+        desc: "Full-stack platform connecting everyday clients with verified local skilled workers and mentors. Includes a high-converting Next.js landing page and companion Flutter mobile app."
+      }
+    ],
+    education: "BS Information Technology at Bahria University Islamabad (2023-2027).",
+    experience: "Full-stack engineer building production web and cross-platform mobile apps since 2023 with verified Vercel deployments."
+  };
+
+  const intents = [
+    {
+      keys: ["burger", "beef", "food", "restaurant"],
+      ans: `<strong>Beef Burger Patties</strong> is a cinematic food restaurant web app deployed on Vercel.<br><br>• <a href="https://beef-burger-patties.vercel.app" target="_blank">Live Vercel Site</a><br>• <a href="https://github.com/10-aqib/Beef-Burger-Patties" target="_blank">GitHub Repository</a><br><br>Features interactive burger customization, cart checkout, and branch discovery.`
+    },
+    {
+      keys: ["1tap", "share", "file", "transfer", "p2p"],
+      ans: `<strong>1Tap</strong> is an instant peer-to-peer sharing tool with zero signup required.<br><br>• <a href="https://1tap-theta.vercel.app" target="_blank">Live Vercel Site</a><br>• <a href="https://github.com/10-aqib/1Tap" target="_blank">GitHub Repository</a><br><br>Pairs via 6-digit codes or QR codes, syncing text, links, and files up to 100MB using Supabase Realtime.`
+    },
+    {
+      keys: ["cleaner", "space", "disk", "storage", "duplicate"],
+      ans: `<strong>Space Cleaner</strong> is a storage intelligence system utility.<br><br>• <a href="https://space-cleaner.vercel.app" target="_blank">Live Vercel Site</a><br>• <a href="https://github.com/10-aqib/Cleaner" target="_blank">GitHub Repository</a><br><br>Features interactive D3 treemaps, TanStack Virtual file browsing, and one-tap cleanup.`
+    },
+    {
+      keys: ["skillbridge", "mentor", "worker", "service", "flutter"],
+      ans: `<strong>SkillBridge</strong> connects users with verified local skilled workers and mentors.<br><br>• <a href="https://website-seven-sand-21.vercel.app" target="_blank">Live Vercel Site</a><br>• <a href="https://github.com/10-aqib/skillBridge-Website" target="_blank">Next.js Web Repo</a><br>• <a href="https://github.com/10-aqib/SkillBridge-" target="_blank">Flutter Mobile Repo</a>`
+    },
+    {
+      keys: ["project", "work", "built", "portfolio", "vercel", "demo", "app"],
+      ans: `I currently have <strong>4 live production applications deployed on Vercel</strong>:<br><br>1. <a href="https://beef-burger-patties.vercel.app" target="_blank">Beef Burger Patties</a> (E-commerce)<br>2. <a href="https://1tap-theta.vercel.app" target="_blank">1Tap</a> (P2P Realtime Sharing)<br>3. <a href="https://space-cleaner.vercel.app" target="_blank">Space Cleaner</a> (Storage Intelligence)<br>4. <a href="https://website-seven-sand-21.vercel.app" target="_blank">SkillBridge</a> (Next.js &amp; Mobile)<br><br>You can click <em>Live Demo</em> on any project card above to test them inside the device simulator!`
+    },
+    {
+      keys: ["skill", "tech", "stack", "language", "framework"],
+      ans: `My core tech stack comprises <strong>React 18</strong>, <strong>Next.js 15</strong>, <strong>TypeScript</strong>, and <strong>Tailwind CSS</strong> on the frontend, with <strong>Supabase</strong>, <strong>PostgreSQL</strong>, and <strong>Node.js</strong> for backend services, and <strong>Flutter / Dart</strong> for cross-platform mobile apps.`
+    },
+    {
+      keys: ["education", "degree", "university", "college"],
+      ans: `I am currently pursuing my <strong>BS in Information Technology</strong> at Bahria University, Islamabad (2023 - 2027), focusing on software engineering, distributed systems, and databases.`
+    },
+    {
+      keys: ["experience", "job", "career", "hire", "work"],
+      ans: `I have been designing and shipping full-stack production software independently since 2023. I am actively looking for full-stack, frontend, or mobile engineering roles.`
+    },
+    {
+      keys: ["contact", "email", "phone", "hire", "reach"],
+      ans: `You can reach Muhammad Aqib directly via email at <a href="mailto:aqibk1051@gmail.com">aqibk1051@gmail.com</a> or phone/WhatsApp at <a href="tel:+923363620708">+92 336 3620708</a>.`
+    },
+    {
+      keys: ["hi", "hello", "hey", "greet"],
+      ans: "Hello! I'm Aqib's portfolio assistant. You can ask me about his 4 live Vercel deployments, tech stack, or engineering experience!"
+    }
+  ];
+
+  const chatToggle = document.getElementById('chatToggle');
+  const chatPanel = document.getElementById('chatPanel');
+  const chatClose = document.getElementById('chatClose');
+  const chatClear = document.getElementById('chatClear');
+  const chatMessages = document.getElementById('chatMessages');
+  const chatInput = document.getElementById('chatInput');
+  const chatSend = document.getElementById('chatSend');
+  const chatChips = document.getElementById('chatChips');
+  
+  let chatOpen = false;
+
+  const appendMsg = (text, sender) => {
+    const div = document.createElement('div');
+    div.className = `chat-msg msg-${sender}`;
+    div.innerHTML = text + `<span class="msg-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>`;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  };
+
+  const processQuery = (q) => {
+    const query = q.toLowerCase();
+    let response = `I'm not completely certain about that specific detail. You can reach out directly to Muhammad Aqib at <a href="mailto:aqibk1051@gmail.com">aqibk1051@gmail.com</a>!`;
+    
+    for (let intent of intents) {
+      if (intent.keys.some(k => query.includes(k))) {
+        response = intent.ans;
+        break;
+      }
+    }
+    
+    setTimeout(() => {
+      appendMsg(response, 'bot');
+    }, 400);
+  };
+
+  const initChat = () => {
+    if (chatMessages.children.length === 0) {
+      appendMsg("Hello! I'm Aqib's AI assistant. Ask me about his 4 live Vercel applications, tech stack, or experience.", "bot");
+      const suggestions = ["Featured Projects", "Beef Burger Patties", "1Tap", "Space Cleaner", "SkillBridge", "Tech Stack", "Contact"];
+      chatChips.innerHTML = '';
+      suggestions.forEach(s => {
+        const btn = document.createElement('button');
+        btn.textContent = s;
+        btn.onclick = () => {
+          appendMsg(s, 'user');
+          processQuery(s);
+        };
+        chatChips.appendChild(btn);
+      });
+    }
+  };
+
+  chatToggle.onclick = () => {
+    chatOpen = !chatOpen;
+    if (chatOpen) {
+      chatPanel.classList.add('open');
+      initChat();
+    } else {
+      chatPanel.classList.remove('open');
+    }
+  };
+  
+  chatClose.onclick = () => {
+    chatOpen = false;
+    chatPanel.classList.remove('open');
+  };
+
+  chatClear.onclick = () => {
+    chatMessages.innerHTML = '';
+    initChat();
+  };
+
+  const handleSend = () => {
+    const val = chatInput.value.trim();
+    if (val) {
+      appendMsg(val, 'user');
+      chatInput.value = '';
+      processQuery(val);
+    }
+  };
+
+  chatSend.onclick = handleSend;
+  chatInput.onkeypress = (e) => { if (e.key === 'Enter') handleSend(); };
+
+  // Contact form submission
+  document.getElementById('contactForm').onsubmit = (e) => {
+    e.preventDefault();
+    const name = document.getElementById('formName').value;
+    alert(`Thank you, ${name}! Your message has been received. You can also email directly at aqibk1051@gmail.com.`);
+    e.target.reset();
+  };
+
+  // Mobile menu button
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener('click', () => {
+      const navLinks = document.querySelector('.nav-links');
+      if (navLinks.style.display === 'flex') {
+        navLinks.style.display = 'none';
+      } else {
+        navLinks.style.display = 'flex';
+        navLinks.style.flexDirection = 'column';
+        navLinks.style.position = 'absolute';
+        navLinks.style.top = '70px';
+        navLinks.style.left = '24px';
+        navLinks.style.right = '24px';
+        navLinks.style.background = 'rgba(10, 8, 20, 0.96)';
+        navLinks.style.border = '1px solid rgba(255,255,255,0.1)';
+        navLinks.style.borderRadius = '16px';
+        navLinks.style.padding = '20px';
+        navLinks.style.gap = '16px';
+      }
+    });
+  }
+});
+</script>
+</body>
+</html>
