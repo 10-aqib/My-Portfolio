@@ -2487,7 +2487,7 @@
               </div>
               <iframe class="preview-iframe" id="iframe-beef-burger" data-src="https://beef-burger-patties.vercel.app"
                 loading="lazy" title="Live demo of Beef Burger Patties"
-                sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals">
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups">
               </iframe>
               <div class="preview-shield" id="shield-beef-burger">
                 <div class="shield-actions">
@@ -2625,7 +2625,7 @@
               </div>
               <iframe class="preview-iframe" id="iframe-1tap" data-src="https://1tap-theta.vercel.app" loading="lazy"
                 title="Live demo of 1Tap"
-                sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals">
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups">
               </iframe>
               <div class="preview-shield" id="shield-1tap">
                 <div class="shield-actions">
@@ -2762,7 +2762,7 @@
               </div>
               <iframe class="preview-iframe" id="iframe-cleaner" data-src="https://space-cleaner.vercel.app"
                 loading="lazy" title="Live demo of Space Cleaner"
-                sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals">
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups">
               </iframe>
               <div class="preview-shield" id="shield-cleaner">
                 <div class="shield-actions">
@@ -2901,7 +2901,7 @@
               </div>
               <iframe class="preview-iframe" id="iframe-skillbridge" data-src="https://website-seven-sand-21.vercel.app"
                 loading="lazy" title="Live demo of SkillBridge"
-                sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals">
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups">
               </iframe>
               <div class="preview-shield" id="shield-skillbridge">
                 <div class="shield-actions">
@@ -3091,6 +3091,7 @@
                 </svg>
                 Send Message
               </button>
+              <div id="formStatus" style="display:none; margin-top: 14px; padding: 12px 16px; border-radius: 8px; font-size: 0.88rem; line-height: 1.4;"></div>
             </form>
           </div>
 
@@ -3236,8 +3237,8 @@
               <span>Loading interactive live application...</span>
             </div>
             <iframe id="modalIframe" class="modal-iframe" src="" title="Live interactive application demo"
-              allow="clipboard-read; clipboard-write; geolocation"
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
+              allow="clipboard-read; clipboard-write"
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
           </div>
         </div>
       </div>
@@ -3279,12 +3280,11 @@
     </div>
   </div>
 
-  <script defer src="assets/app.js"></script>
-
   <!-- P1: Non-blocking deferred library scripts — loaded after DOM is ready -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script defer src="assets/app.js"></script>
 </body>
 
 </html>
