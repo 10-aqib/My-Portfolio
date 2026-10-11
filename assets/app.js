@@ -475,7 +475,7 @@ const initPortfolio = () => {
     },
     {
       keys: ["hi", "hello", "hey", "greet"],
-      ans: `Hello! I am Aqib's AI Portfolio Assistant. I'm here to provide technical clarity on his 4 live Vercel deployments, mobile architecture, tech stack, and background. What would you like to know?`
+      ans: `Hey there! 👋 Welcome to Aqib's digital playground. 🚀<br><br>I'm his AI sidekick, here to take you beyond the usual portfolio.<br><br>Curious about the apps he's built, the technologies behind them, or what he's working on next?<br><br>💬 <strong>Ask me anything.</strong> Let's explore what Aqib can build!`
     }
   ];
 
@@ -517,7 +517,7 @@ const initPortfolio = () => {
 
   const initChat = () => {
     if (chatMessages && chatMessages.children.length === 0) {
-      appendMsg("Hello! I am Aqib's AI Assistant. I can provide details regarding his 4 live Vercel deployments, mobile architecture, tech stack, and background. How can I assist you?", "bot");
+      appendMsg(`Hey there! 👋 Welcome to Aqib's digital playground. 🚀<br><br>I'm his AI sidekick, here to take you beyond the usual portfolio.<br><br>Curious about the apps he's built, the technologies behind them, or what he's working on next?<br><br>💬 <strong>Ask me anything.</strong> Let's explore what Aqib can build!`, "bot");
       const suggestions = ["Featured Projects", "1Tap", "Space Cleaner", "Beef Burger Patties", "SkillBridge", "Tech Stack", "Mobile Apps", "Contact"];
       if (chatChips) {
         chatChips.innerHTML = '';
