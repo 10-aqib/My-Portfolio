@@ -29,6 +29,17 @@ Contact — email, phone, GitHub, Instagram, and a contact form
 
 The built-in assistant isn't a wrapper around a third-party LLM — it's a lightweight, from-scratch semantic matcher: it normalizes each question, scores it against a set of trained intents (skills, projects, education, experience, availability, contact, and more), and responds in first person as if I'm answering directly. It also handles simple follow-ups like "tell me more."
 
+## 🖥️ 3D desk (index.html)
+
+The home page is an interactive 3D workstation built with Three.js (loaded from a CDN — still no build step).
+The monitor shows the real, clickable portfolio (`portfolio.html`) through a CSS3D-positioned iframe; WebGL
+draws the desk, keyboard, mouse and lighting around it. Scroll (or click the screen) to sit down; press Esc to step back.
+
+- `index.html` + `assets/desk/` — 3D shell, camera path, loader
+- `portfolio.html` + `assets/portfolio/` — the portfolio app shown on the monitor, and the site phones get directly
+- `classic.html` — the previous one-page site, kept as-is
+- Add `?2d` to the URL to skip the 3D desk. Run locally with `node server.js` (or `PORT=5180 node server.js`).
+
 🚀 Running Locally
 
 This is a static site — no build step required.

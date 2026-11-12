@@ -1,704 +1,384 @@
-const initPortfolio = () => {
-  /* ===================================================
-     THREE.JS INTERACTIVE BACKGROUND
-     =================================================== */
-  const initThreeJS = () => {
-    const container = document.getElementById('canvas-container');
-    if (!container || typeof THREE === 'undefined') return;
+(() => {
+  'use strict';
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 30;
+  const $ = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+  // Motion is always on: many Windows setups report "reduce motion" by default,
+  // which previously switched every animation off.
+  const reduced = false;
+  const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const root = document.documentElement;
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    container.appendChild(renderer.domElement);
+  /* ---------- Smooth scroll (Lenis, optional) ---------- */
+  let lenis = null;
+  if (!reduced && typeof window.Lenis === 'function') {
+    lenis = new window.Lenis({ duration: 1.15, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
+    requestAnimationFrame(raf);
+  }
+  const scrollToTarget = (target) => {
+    if (lenis) lenis.scrollTo(target, { offset: 0, duration: 1.4 });
+    else target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+  };
+  const lockScroll = (on) => {
+    document.body.classList.toggle('is-locked', on);
+    if (lenis) on ? lenis.stop() : lenis.start();
+  };
 
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 1400;
-    const posArray = new Float32Array(particlesCount * 3);
-
-    for (let i = 0; i < particlesCount * 3; i++) {
-      posArray[i] = (Math.random() - 0.5) * 100;
+  /* ---------- Loader ---------- */
+  const loader = $('#loader');
+  const loaderNum = $('#loaderNum');
+  const hero = $('#top');
+  let started = false;
+  const startHero = () => {
+    if (started) return;
+    started = true;
+    hero.classList.add('hero-ready');
+  };
+  const runLoader = () => {
+    if (!loader || reduced) {
+      if (loader) loader.remove();
+      startHero();
+      return;
     }
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-
-    const particlesMaterial = new THREE.PointsMaterial({
-      size: 0.15,
-      color: 0x00ffaa,
-      transparent: true,
-      opacity: 0.75,
-      blending: THREE.AdditiveBlending
-    });
-
-    const particleMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-    scene.add(particleMesh);
-
-    const sphereGeo = new THREE.IcosahedronGeometry(15, 2);
-    const sphereMat = new THREE.MeshBasicMaterial({
-      color: 0x7d2ae8,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.14
-    });
-    const sphere = new THREE.Mesh(sphereGeo, sphereMat);
-    scene.add(sphere);
-
-    let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
-    const windowHalfX = window.innerWidth / 2;
-    const windowHalfY = window.innerHeight / 2;
-
-    document.addEventListener('mousemove', (event) => {
-      mouseX = (event.clientX - windowHalfX) * 0.0008;
-      mouseY = (event.clientY - windowHalfY) * 0.0008;
-    });
-
-    const animate = () => {
-      requestAnimationFrame(animate);
-      targetX = mouseX * 0.5;
-      targetY = mouseY * 0.5;
-
-      particleMesh.rotation.y += 0.0008;
-      particleMesh.rotation.x += 0.0004;
-
-      sphere.rotation.y += 0.0016;
-      sphere.rotation.x += 0.0008;
-
-      scene.rotation.y += 0.04 * (targetX - scene.rotation.y);
-      scene.rotation.x += 0.04 * (targetY - scene.rotation.x);
-
-      renderer.render(scene, camera);
+    lockScroll(true);
+    const dur = 1500;
+    const t0 = performance.now();
+    const tick = (now) => {
+      const p = Math.min(1, (now - t0) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      loaderNum.textContent = String(Math.round(eased * 100)).padStart(2, '0');
+      if (p < 1) requestAnimationFrame(tick);
+      else {
+        loader.classList.add('done');
+        lockScroll(false);
+        setTimeout(startHero, 350);
+        setTimeout(() => loader.remove(), 1200);
+      }
     };
-    animate();
-
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-  };
-
-  initThreeJS();
-
-  /* ===================================================
-     GSAP ANIMATIONS & SCROLL REVEALS
-     =================================================== */
-  if (typeof gsap !== 'undefined') {
-    if (typeof ScrollTrigger !== 'undefined') {
-      gsap.registerPlugin(ScrollTrigger);
-    }
-
-    const header = document.getElementById('header');
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 40) {
-        header.classList.add('scrolled');
-      } else {
-        header.classList.remove('scrolled');
-      }
-    });
-
-    gsap.from(".hero-text-content > *", {
-      y: 25,
-      opacity: 0,
-      duration: 0.9,
-      stagger: 0.12,
-      ease: "power3.out",
-      delay: 0.15
-    });
-
-    gsap.from(".hero-visual", {
-      x: 40,
-      opacity: 0,
-      duration: 1.1,
-      ease: "power3.out",
-      delay: 0.35
-    });
-
-    const revealElements = document.querySelectorAll('.gsap-reveal');
-    revealElements.forEach((el) => {
-      gsap.from(el, {
-        scrollTrigger: {
-          trigger: el,
-          start: "top 88%",
-          toggleActions: "play none none none"
-        },
-        y: 35,
-        opacity: 0,
-        duration: 0.75,
-        ease: "power3.out"
-      });
-    });
-
-    const skillCards = document.querySelectorAll('.skill-card');
-    skillCards.forEach(card => {
-      const bar = card.querySelector('.skill-progress');
-      if (bar) {
-        const width = bar.getAttribute('data-width');
-        gsap.to(bar, {
-          scrollTrigger: {
-            trigger: card,
-            start: "top 88%"
-          },
-          width: width,
-          duration: 1.4,
-          ease: "power3.out",
-          delay: 0.2
-        });
-      }
-    });
-  }
-
-  /* ===================================================
-     3D TILT EFFECT FOR CARDS
-     =================================================== */
-  const tiltElements = document.querySelectorAll('.tilt-element');
-  tiltElements.forEach(el => {
-    el.addEventListener('mousemove', e => {
-      const rect = el.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const xPct = (x / rect.width - 0.5) * 12;
-      const yPct = (y / rect.height - 0.5) * -12;
-      el.style.transform = `perspective(1000px) rotateX(${yPct}deg) rotateY(${xPct}deg) scale3d(1.01, 1.01, 1.01)`;
-    });
-    el.addEventListener('mouseleave', () => {
-      el.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
-    });
-  });
-
-  const yearEl = document.getElementById('year');
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-  /* ===================================================
-     LIVE PROJECTS DATA & INTERACTIVE PREVIEWS
-     =================================================== */
-  const PROJECTS_CONFIG = {
-    'beef-burger': {
-      title: 'Beef Burger Patties',
-      url: 'https://beef-burger-patties.vercel.app',
-      github: 'https://github.com/10-aqib/Beef-Burger-Patties',
-      displayUrl: 'beef-burger-patties.vercel.app',
-      desc: 'Cinematic food-focused online ordering platform with interactive burger customization, deals, and Pakistan branch discovery.'
-    },
-    '1tap': {
-      title: '1Tap',
-      url: 'https://1tap-theta.vercel.app',
-      github: 'https://github.com/10-aqib/1Tap',
-      displayUrl: '1tap-theta.vercel.app',
-      desc: 'Instant zero-signup cross-device peer-to-peer file, text, and link sharing using Supabase Realtime & QR room pairing.'
-    },
-    'cleaner': {
-      title: 'Space Cleaner',
-      url: 'https://space-cleaner.vercel.app',
-      github: 'https://github.com/10-aqib/Cleaner',
-      displayUrl: 'space-cleaner.vercel.app',
-      desc: 'Storage intelligence tool finding duplicate, unused and large files with D3 storage visualizers and one-tap cleanup.'
-    },
-    'skillbridge': {
-      title: 'SkillBridge',
-      url: 'https://website-seven-sand-21.vercel.app',
-      github: 'https://github.com/10-aqib/skillBridge-Website',
-      displayUrl: 'website-seven-sand-21.vercel.app',
-      desc: 'Modern Next.js platform connecting communities with verified local skilled workers and mentors with companion Flutter app.'
-    }
-  };
-
-  // Lazy load in-card preview iframes only when card enters viewport
-  // Poster is shown by default; skeleton shows during active load; poster hides on load
-  const loadCardIframe = (card) => {
-    const iframe = card.querySelector('.preview-iframe');
-    const skeleton = card.querySelector('.preview-skeleton');
-    const poster = card.querySelector('.preview-poster');
-    if (iframe && iframe.dataset.src && !iframe.src) {
-      if (skeleton) skeleton.classList.remove('hidden');
-      iframe.src = iframe.dataset.src;
-      let loaded = false;
-      const onLoaded = () => {
-        if (loaded) return;
-        loaded = true;
-        iframe.classList.add('loaded');
-        if (skeleton) skeleton.classList.add('hidden');
-        if (poster) poster.classList.add('hidden');
-      };
-      iframe.onload = onLoaded;
-      iframe.onerror = onLoaded;
-      // Fallback: hide skeleton after 6s if onload doesn't fire (cross-origin / CSP)
-      setTimeout(onLoaded, 6000);
-    }
-  };
-
-  const cardObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        loadCardIframe(entry.target);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { rootMargin: '0px 0px' });
-
-  document.querySelectorAll('.project-card').forEach(card => {
-    cardObserver.observe(card);
-  });
-
-  // In-Card Interaction Unlock/Lock Handlers
-  document.querySelectorAll('.btn-shield-interact').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const targetId = btn.dataset.interactTarget;
-      const shield = document.getElementById(`shield-${targetId}`);
-      const iframe = document.getElementById(`iframe-${targetId}`);
-      const lockBtn = document.getElementById(`lock-${targetId}`);
-      const card = iframe ? iframe.closest('.project-card') : null;
-
-      if (card) loadCardIframe(card);
-
-      if (shield) shield.classList.add('unlocked');
-      if (iframe) iframe.classList.add('interactive');
-      if (lockBtn) lockBtn.classList.add('visible');
-    });
-  });
-
-  document.querySelectorAll('.preview-lock-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const targetId = btn.dataset.lockTarget;
-      const shield = document.getElementById(`shield-${targetId}`);
-      const iframe = document.getElementById(`iframe-${targetId}`);
-
-      if (shield) shield.classList.remove('unlocked');
-      if (iframe) iframe.classList.remove('interactive');
-      btn.classList.remove('visible');
-    });
-  });
-
-  /* ===================================================
-     DEVICE SIMULATOR MODAL LOGIC
-     =================================================== */
-  const demoModal = document.getElementById('demoModal');
-  const modalIframe = document.getElementById('modalIframe');
-  const modalUrlDisplay = document.getElementById('modalUrlDisplay');
-  const modalExternalLink = document.getElementById('modalExternalLink');
-  const modalLoader = document.getElementById('modalLoader');
-  const deviceFrame = document.getElementById('deviceFrame');
-  const modalCloseBtn = document.getElementById('modalCloseBtn');
-  const modalCloseDot = document.getElementById('modalCloseDot');
-  const modalBackdrop = document.getElementById('modalBackdrop');
-  const modalReload = document.getElementById('modalReload');
-  const modalCopyUrl = document.getElementById('modalCopyUrl');
-  const viewportBtns = document.querySelectorAll('.viewport-btn');
-
-  let activeProject = null;
-  let modalLoadTimeout = null;
-
-  const openDemoModal = (projectId) => {
-    const proj = PROJECTS_CONFIG[projectId];
-    if (!proj) return;
-
-    activeProject = proj;
-    if (modalUrlDisplay) modalUrlDisplay.textContent = proj.url;
-    if (modalExternalLink) modalExternalLink.href = proj.url;
-
-    if (modalLoader) modalLoader.classList.remove('hidden');
-    if (modalLoadTimeout) clearTimeout(modalLoadTimeout);
-
-    if (modalIframe) {
-      modalIframe.src = proj.url;
-
-      const onIframeLoaded = () => {
-        if (modalLoadTimeout) {
-          clearTimeout(modalLoadTimeout);
-          modalLoadTimeout = null;
-        }
-        setTimeout(() => {
-          if (modalLoader) modalLoader.classList.add('hidden');
-        }, 350);
-      };
-
-      modalIframe.onload = onIframeLoaded;
-      modalIframe.onerror = () => {
-        if (modalLoader) modalLoader.classList.add('hidden');
-      };
-
-      // 8-second safety timeout so loader spinner never freezes
-      modalLoadTimeout = setTimeout(onIframeLoaded, 8000);
-    }
-
-    if (demoModal) {
-      demoModal.classList.add('active');
-      demoModal.setAttribute('aria-hidden', 'false');
-    }
-    document.body.style.overflow = 'hidden';
-  };
-
-  const closeDemoModal = () => {
-    if (modalLoadTimeout) {
-      clearTimeout(modalLoadTimeout);
-      modalLoadTimeout = null;
-    }
-    if (demoModal) {
-      demoModal.classList.remove('active');
-      demoModal.setAttribute('aria-hidden', 'true');
-    }
-    document.body.style.overflow = '';
+    requestAnimationFrame(tick);
+    // Safety net: never leave the loader up if animation frames are throttled.
     setTimeout(() => {
-      if (demoModal && !demoModal.classList.contains('active') && modalIframe) {
-        modalIframe.src = '';
-      }
-    }, 300);
+      if (!document.body.contains(loader)) return;
+      loaderNum.textContent = '100';
+      loader.classList.add('done');
+      lockScroll(false);
+      startHero();
+      setTimeout(() => loader.remove(), 1200);
+    }, dur + 1500);
   };
+  runLoader();
 
-  // Trigger modal from any "Live Demo" or "Device Simulator" button
-  document.querySelectorAll('[data-demo-target]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      openDemoModal(btn.dataset.demoTarget);
-    });
+  /* ---------- Reveal on scroll ---------- */
+  const revealEls = $$('[data-reveal], [data-reveal-line]');
+  const stagger = new Map();
+  revealEls.forEach((el) => {
+    const parent = el.parentElement;
+    const n = stagger.get(parent) || 0;
+    stagger.set(parent, n + 1);
+    if (n) el.style.setProperty('--d', `${Math.min(n, 5) * 0.08}s`);
   });
-
-  if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeDemoModal);
-  if (modalCloseDot) modalCloseDot.addEventListener('click', closeDemoModal);
-  if (modalBackdrop) modalBackdrop.addEventListener('click', closeDemoModal);
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && demoModal && demoModal.classList.contains('active')) {
-      closeDemoModal();
-    }
-  });
-
-  // Viewport Switcher
-  viewportBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      viewportBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const view = btn.dataset.viewport;
-      if (deviceFrame) deviceFrame.className = `device-frame view-${view}`;
+  if ('IntersectionObserver' in window && !reduced) {
+    // Masked line spans are clipped by their wrapper, so observe the wrapper instead.
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        const el = e.target._reveal || e.target;
+        el.classList.add('in');
+        io.unobserve(e.target);
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
+    revealEls.forEach((el) => {
+      if (el.hasAttribute('data-reveal-line')) {
+        const wrap = el.closest('.line');
+        const idx = $$('.line', wrap.parentElement).indexOf(wrap);
+        el.style.setProperty('--d', `${idx * 0.12}s`);
+        wrap._reveal = el;
+        io.observe(wrap);
+      } else io.observe(el);
     });
-  });
-
-  // Reload iframe
-  if (modalReload) {
-    modalReload.addEventListener('click', () => {
-      if (activeProject && modalIframe) {
-        if (modalLoader) modalLoader.classList.remove('hidden');
-        if (modalLoadTimeout) clearTimeout(modalLoadTimeout);
-        modalIframe.src = activeProject.url;
-        modalLoadTimeout = setTimeout(() => {
-          if (modalLoader) modalLoader.classList.add('hidden');
-        }, 8000);
-      }
-    });
+  } else {
+    revealEls.forEach((el) => el.classList.add('in'));
   }
 
-  // Copy URL with visual indicator
-  if (modalCopyUrl) {
-    modalCopyUrl.addEventListener('click', () => {
-      if (activeProject && modalUrlDisplay) {
-        navigator.clipboard.writeText(activeProject.url).then(() => {
-          const originalText = modalUrlDisplay.textContent;
-          modalUrlDisplay.textContent = 'Copied to clipboard!';
-          modalUrlDisplay.style.color = 'var(--accent-emerald)';
-          setTimeout(() => {
-            modalUrlDisplay.textContent = originalText;
-            modalUrlDisplay.style.color = '#fff';
-          }, 1800);
+  /* ---------- Scroll-scrubbed words ---------- */
+  const scrub = $('#scrub');
+  let words = [];
+  if (scrub) {
+    const text = scrub.textContent.trim();
+    scrub.setAttribute('aria-label', text);
+    scrub.innerHTML = text.split(/\s+/).map((w) => `<span class="w" aria-hidden="true">${w}</span>`).join(' ');
+    words = $$('.w', scrub);
+  }
+
+  /* ---------- Scroll-driven effects ---------- */
+  const parallaxEls = $$('[data-parallax]');
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      ticking = false;
+      const vh = window.innerHeight;
+      if (words.length) {
+        const r = scrub.getBoundingClientRect();
+        const p = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.35)));
+        const upto = Math.round(p * words.length);
+        words.forEach((w, i) => w.classList.toggle('on', i < upto));
+      }
+      if (!reduced && window.innerWidth > 1024 && window.scrollY < vh * 1.5) {
+        parallaxEls.forEach((el) => {
+          const k = parseFloat(el.dataset.parallax) || 0;
+          el.style.translate = `0 ${(window.scrollY * k * 100) / 100}px`;
         });
       }
     });
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  onScroll();
+
+  /* ---------- Nav: sliding pill + active section ---------- */
+  const pillNav = $('#pillNav');
+  const ind = $('.pill-ind', pillNav);
+  const navLinks = $$('a', pillNav);
+  const moveInd = (link) => {
+    if (!link) { ind.style.opacity = 0; return; }
+    ind.style.opacity = 1;
+    ind.style.width = `${link.offsetWidth}px`;
+    ind.style.transform = `translateX(${link.offsetLeft}px)`;
+  };
+  let activeLink = null;
+  const setActive = (id) => {
+    activeLink = navLinks.find((a) => a.dataset.nav === id) || null;
+    navLinks.forEach((a) => a.classList.toggle('active', a === activeLink));
+    moveInd(activeLink);
+  };
+  navLinks.forEach((a) => {
+    a.addEventListener('mouseenter', () => { moveInd(a); navLinks.forEach((x) => x.classList.toggle('active', x === a)); });
+  });
+  pillNav.addEventListener('mouseleave', () => {
+    navLinks.forEach((a) => a.classList.toggle('active', a === activeLink));
+    moveInd(activeLink);
+  });
+  window.addEventListener('resize', () => moveInd(activeLink));
+  if ('IntersectionObserver' in window) {
+    const ids = ['work', 'about', 'experience', 'contact'];
+    const secObs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) setActive(e.target.id); });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    ids.forEach((id) => { const s = document.getElementById(id); if (s) secObs.observe(s); });
+    const clear = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) setActive(null); });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    ['top', 'statement'].forEach((id) => { const s = document.getElementById(id); if (s) clear.observe(s); });
   }
 
-  /* ===================================================
-     AI CHATBOT ASSISTANT
-     =================================================== */
-  const KB = {
-    identity: {
-      name: "Muhammad Aqib",
-      role: "Web and Mobile Engineer",
-      email: "aqibk1051@gmail.com",
-      phone: "+92 336 3620708",
-      location: "Islamabad, Pakistan"
-    }
+  /* ---------- Header colour over lime sections ---------- */
+  if ('IntersectionObserver' in window) {
+    const over = new Set();
+    const limeObs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => (e.isIntersecting ? over.add(e.target) : over.delete(e.target)));
+      $('#header').classList.toggle('on-lime', over.size > 0);
+    }, { rootMargin: '0px 0px -94% 0px' });
+    $$('#statement, #contact').forEach((s) => limeObs.observe(s));
+  }
+
+  /* ---------- Mobile menu ---------- */
+  const header = $('#header');
+  const menuBtn = $('#menuBtn');
+  const mobileMenu = $('#mobileMenu');
+  const setMenu = (open) => {
+    mobileMenu.classList.toggle('open', open);
+    mobileMenu.setAttribute('aria-hidden', String(!open));
+    menuBtn.setAttribute('aria-expanded', String(open));
+    menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    header.classList.toggle('menu-open', open);
+    lockScroll(open);
   };
+  menuBtn.addEventListener('click', () => setMenu(!mobileMenu.classList.contains('open')));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { setMenu(false); closeChat(); }
+  });
+  window.addEventListener('resize', () => { if (window.innerWidth > 860) setMenu(false); });
+
+  /* ---------- Anchor links ---------- */
+  $$('a[href^="#"]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      if (id.length < 2) return;
+      const target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      const wasOpen = mobileMenu.classList.contains('open');
+      if (wasOpen) setMenu(false);
+      setTimeout(() => scrollToTarget(target), wasOpen ? 350 : 0);
+      history.replaceState(null, '', id);
+    });
+  });
+
+  /* ---------- Accordion ---------- */
+  $$('.acc-item').forEach((item) => {
+    const btn = $('.acc-head', item);
+    btn.addEventListener('click', () => {
+      const open = !item.classList.contains('open');
+      $$('.acc-item').forEach((i) => {
+        i.classList.remove('open');
+        $('.acc-head', i).setAttribute('aria-expanded', 'false');
+      });
+      if (open) { item.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
+    });
+  });
+
+  /* ---------- Cursor bubble on project cards ---------- */
+  const cursor = $('#cursor');
+  if (cursor && finePointer && !reduced) {
+    const label = $('span', cursor);
+    let x = -200, y = -200, cx = x, cy = y;
+    const loop = () => {
+      cx += (x - cx) * 0.2; cy += (y - cy) * 0.2;
+      cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+      requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+    window.addEventListener('mousemove', (e) => { x = e.clientX; y = e.clientY; }, { passive: true });
+    $$('[data-cursor]').forEach((el) => {
+      el.addEventListener('mouseenter', () => { label.textContent = el.dataset.cursor; cursor.classList.add('show'); });
+      el.addEventListener('mouseleave', () => cursor.classList.remove('show'));
+    });
+  }
+
+  /* ---------- Misc ---------- */
+  const year = $('#year');
+  if (year) year.textContent = new Date().getFullYear();
+  const top = $('[data-top]');
+  if (top) top.addEventListener('click', () => { if (lenis) lenis.scrollTo(0, { duration: 1.4 }); });
+
+  /* ===================================================
+     Assistant (semantic keyword matcher, no external API)
+     =================================================== */
+  const EMAIL = 'aqibk1051@gmail.com';
+  const PHONE = '+92 336 3620708';
+  const ext = (href, label) => `<a href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+  const welcome = `Hey! 👋 I'm Aqib's assistant.<br><br>Ask me about his projects, skills, experience or how to get in touch.`;
 
   const intents = [
-    {
-      keys: ["burger", "beef", "food", "restaurant", "patties"],
-      ans: `<strong>Beef Burger Patties</strong> is a full-featured online food ordering platform.<br><br>• <a href="https://beef-burger-patties.vercel.app" target="_blank" rel="noopener noreferrer">Live Deployment</a><br>• <a href="https://github.com/10-aqib/Beef-Burger-Patties" target="_blank" rel="noopener noreferrer">GitHub Repository</a><br><br>Features interactive burger customization, GSAP animations, cart &amp; checkout flows, and Pakistan branch discovery.`
-    },
-    {
-      keys: ["1tap", "share", "file", "transfer", "p2p"],
-      ans: `<strong>1Tap</strong> is a zero-signup cross-device peer-to-peer sharing application.<br><br>• <a href="https://1tap-theta.vercel.app" target="_blank" rel="noopener noreferrer">Live Deployment</a><br>• <a href="https://github.com/10-aqib/1Tap" target="_blank" rel="noopener noreferrer">GitHub Repository</a><br><br>Pairs devices instantly via 6-digit room codes or QR codes to transfer text, links, and files in real-time powered by Supabase Realtime.`
-    },
-    {
-      keys: ["cleaner", "space", "disk", "storage", "duplicate"],
-      ans: `<strong>Space Cleaner</strong> is a high-performance disk storage intelligence tool.<br><br>• <a href="https://space-cleaner.vercel.app" target="_blank" rel="noopener noreferrer">Live Deployment</a><br>• <a href="https://github.com/10-aqib/Cleaner" target="_blank" rel="noopener noreferrer">GitHub Repository</a><br><br>Features interactive D3 treemap visualizations, TanStack Virtual tree exploration, and duplicate/heavy file detection.`
-    },
-    {
-      keys: ["skillbridge", "mentor", "worker", "service"],
-      ans: `<strong>SkillBridge</strong> connects communities with verified local skilled workers and mentors.<br><br>• <a href="https://website-seven-sand-21.vercel.app" target="_blank" rel="noopener noreferrer">Live Web Deployment</a><br>• <a href="https://github.com/10-aqib/skillBridge-Website" target="_blank" rel="noopener noreferrer">Next.js Web Repo</a><br>• <a href="https://github.com/10-aqib/SkillBridge-" target="_blank" rel="noopener noreferrer">Flutter Mobile Repo</a><br><br>Built with Next.js on the web and paired with a companion Flutter mobile architecture.`
-    },
-    {
-      keys: ["health", "healthsync", "medical", "doctor"],
-      ans: `<strong>HealthSync</strong> is a mobile architecture concept built with Flutter and Dart. It features real-time booking flows, authentication, and structured cloud storage powered by the Firebase suite (Auth, Firestore, Cloud Storage).`
-    },
-    {
-      keys: ["project", "work", "built", "portfolio", "featured", "vercel", "demo", "app"],
-      ans: `I currently have <strong>4 live production applications deployed on Vercel</strong>:<br><br>1. <a href="https://1tap-theta.vercel.app" target="_blank" rel="noopener noreferrer">1Tap</a> — P2P Realtime Sharing<br>2. <a href="https://space-cleaner.vercel.app" target="_blank" rel="noopener noreferrer">Space Cleaner</a> — Disk Storage Intelligence<br>3. <a href="https://website-seven-sand-21.vercel.app" target="_blank" rel="noopener noreferrer">SkillBridge</a> — Mentorship &amp; Worker Platform<br>4. <a href="https://beef-burger-patties.vercel.app" target="_blank" rel="noopener noreferrer">Beef Burger Patties</a> — Food Ordering &amp; Customizer<br><br>Plus mobile highlight <strong>HealthSync</strong> (Flutter &amp; Firebase). Click <em>Live Demo</em> on any card above to test inside the device simulator!`
-    },
-    {
-      keys: ["skill", "tech", "stack", "language", "framework", "web", "full-stack", "frontend", "backend"],
-      ans: `My primary stack includes <strong>React</strong>, <strong>Next.js (App Router)</strong>, <strong>TypeScript</strong>, <strong>Vite</strong>, and <strong>Tailwind CSS</strong> on the frontend, with <strong>Node.js</strong>, <strong>Express</strong>, <strong>Supabase</strong>, and <strong>PostgreSQL</strong> on the backend. For cross-platform mobile, I specialize in <strong>Flutter &amp; Dart</strong> with Firebase.`
-    },
-    {
-      keys: ["mobile", "flutter", "dart", "ios", "android"],
-      ans: `I architect mobile applications using <strong>Flutter</strong> and <strong>Dart</strong>. My approach emphasizes reactive state management, SQLite for local caching, clean architecture, and integration with the <strong>Firebase suite</strong> (Auth, Firestore, Storage, Cloud Messaging).`
-    },
-    {
-      keys: ["data", "science", "ml", "machine learning", "python", "ai"],
-      ans: `In data science and machine learning, I work with <strong>Python</strong>, <strong>Pandas</strong>, <strong>NumPy</strong>, and <strong>Scikit-learn</strong>. Specializations include transaction fraud detection pipelines with feature encoding, normalization, and classification models like RandomForest.`
-    },
-    {
-      keys: ["creative ai", "prompt", "midjourney", "image", "video", "generation"],
-      ans: `I also specialize in <strong>Creative AI and Multimedia Prompt Engineering</strong>, designing prompt architectures for high-fidelity visual generation with optical camera parameters, cinematic color grading, and volumetric lighting.`
-    },
-    {
-      keys: ["education", "degree", "university", "college", "study"],
-      ans: `I am currently pursuing a <strong>BS in Information Technology</strong> at Bahria University, Islamabad (2023–2027). Core coursework includes Distributed Systems, Operating Systems, Database Administration, and Network Security.`
-    },
-    {
-      keys: ["experience", "job", "career", "hire"],
-      ans: `I have been designing, developing, and shipping full-stack production software independently since 2023. I am actively looking for full-stack, frontend, or mobile engineering opportunities worldwide.`
-    },
-    {
-      keys: ["contact", "email", "phone", "hire", "reach"],
-      ans: `You can reach Muhammad Aqib directly via email at <a href="mailto:aqibk1051@gmail.com">aqibk1051@gmail.com</a> or WhatsApp at <a href="tel:+923363620708">+92 336 3620708</a>.`
-    },
-    {
-      keys: ["hi", "hello", "hey", "greet"],
-      ans: `Hey there! 👋 Welcome to Aqib's digital playground. 🚀<br><br>I'm his AI sidekick, here to take you beyond the usual portfolio.<br><br>Curious about the apps he's built, the technologies behind them, or what he's working on next?<br><br>💬 <strong>Ask me anything.</strong> Let's explore what Aqib can build!`
-    }
+    { keys: ['burger', 'beef', 'food', 'restaurant', 'patties'],
+      ans: `<strong>Beef Burger Patties</strong> is an online food-ordering web app with a burger customizer, cart and checkout flow, and branch discovery across Pakistan.<br><br>• ${ext('https://beef-burger-patties.vercel.app', 'Live site')}<br>• ${ext('https://github.com/10-aqib/Beef-Burger-Patties', 'Source on GitHub')}` },
+    { keys: ['1tap', 'share', 'file', 'transfer', 'p2p', 'room'],
+      ans: `<strong>1Tap</strong> shares text, links and files between devices with no account — join a shared Wi-Fi room or pair privately. It runs on Supabase Realtime.<br><br>• ${ext('https://1tap-theta.vercel.app', 'Live site')}<br>• ${ext('https://github.com/10-aqib/1Tap', 'Source on GitHub')}` },
+    { keys: ['cleaner', 'space', 'disk', 'storage', 'duplicate'],
+      ans: `<strong>Space Cleaner</strong> finds duplicate, unused and heavy files and shows storage as interactive D3 maps.<br><br>• ${ext('https://space-cleaner.vercel.app', 'Live site')}<br>• ${ext('https://github.com/10-aqib/Cleaner', 'Source on GitHub')}` },
+    { keys: ['skillbridge', 'mentor', 'worker', 'employment'],
+      ans: `<strong>SkillBridge</strong> connects people with local skilled workers and mentors. It has a Next.js web app and a Flutter mobile app. It isn't publicly deployed right now, so the source is on GitHub:<br><br>• ${ext('https://github.com/10-aqib/skillBridge-Website', 'Web app source')}<br>• ${ext('https://github.com/10-aqib/SkillBridge-', 'Flutter app source')}` },
+    { keys: ['health', 'healthsync'],
+      ans: `<strong>HealthSync</strong> is a Flutter and Dart mobile concept built around Firebase (Auth, Firestore, Storage).` },
+    { keys: ['project', 'work', 'built', 'portfolio', 'featured', 'demo', 'app'],
+      ans: `Four featured projects:<br><br>1. ${ext('https://1tap-theta.vercel.app', '1Tap')} — real-time sharing (live)<br>2. ${ext('https://beef-burger-patties.vercel.app', 'Beef Burger Patties')} — food ordering (live)<br>3. ${ext('https://space-cleaner.vercel.app', 'Space Cleaner')} — storage tool (live)<br>4. SkillBridge — Flutter + Next.js platform (source on ${ext('https://github.com/10-aqib/SkillBridge-', 'GitHub')})` },
+    { keys: ['skill', 'tech', 'stack', 'language', 'framework', 'frontend', 'backend', 'react', 'node'],
+      ans: `Mostly <strong>Flutter</strong>, <strong>Dart</strong> and <strong>Firebase</strong> for mobile, and <strong>JavaScript</strong>, <strong>TypeScript</strong>, <strong>React</strong>, <strong>Next.js</strong>, <strong>Node.js</strong>, <strong>Supabase</strong>, HTML and CSS for web — with Git and GitHub for workflow.` },
+    { keys: ['mobile', 'flutter', 'dart', 'ios', 'android', 'firebase'],
+      ans: `Aqib builds mobile apps with <strong>Flutter</strong> and <strong>Dart</strong>, using <strong>Firebase</strong> (Auth, Firestore, Storage) for the back end.` },
+    { keys: ['altaf', 'intern', 'internship', 'meta', 'ads', 'client', 'appointment', 'business'],
+      ans: `Aqib interned at <strong>Altaf Developers</strong>, where he worked on website maintenance and digital solutions for clients, built an appointment system for a client and got exposure to Meta Ads. He has also delivered websites to local businesses in Islamabad.` },
+    { keys: ['education', 'degree', 'university', 'college', 'study', 'bahria'],
+      ans: `Aqib is studying <strong>BS Information Technology</strong> at Bahria University, Islamabad (2023–2027).` },
+    { keys: ['experience', 'job', 'career', 'hire', 'available', 'availability'],
+      ans: `Aqib has been building web and mobile projects since 2023 and is open to work — remote, hybrid or on-site. See the Experience section above, or ${ext('assets/aqib-cv.pdf', 'download his CV')}.` },
+    { keys: ['contact', 'email', 'phone', 'reach', 'whatsapp', 'linkedin', 'github'],
+      ans: `• Email: <a href="mailto:${EMAIL}">${EMAIL}</a><br>• WhatsApp / phone: <a href="tel:+923363620708">${PHONE}</a><br>• ${ext('https://github.com/10-aqib', 'GitHub')} · ${ext('https://www.linkedin.com/in/aqib10', 'LinkedIn')}` },
+    { keys: ['hi', 'hello', 'hey'], ans: welcome }
   ];
 
-  const chatToggle = document.getElementById('chatToggle');
-  const chatPanel = document.getElementById('chatPanel');
-  const chatClose = document.getElementById('chatClose');
-  const chatClear = document.getElementById('chatClear');
-  const chatMessages = document.getElementById('chatMessages');
-  const chatInput = document.getElementById('chatInput');
-  const chatSend = document.getElementById('chatSend');
-  const chatChips = document.getElementById('chatChips');
-
+  const chatToggle = $('#chatToggle');
+  const chatPanel = $('#chatPanel');
+  const chatMessages = $('#chatMessages');
+  const chatInput = $('#chatInput');
+  const chatChips = $('#chatChips');
   let chatOpen = false;
 
-  const appendMsg = (text, sender) => {
-    if (!chatMessages) return;
+  const appendMsg = (html, sender) => {
     const div = document.createElement('div');
     div.className = `chat-msg msg-${sender}`;
-    div.innerHTML = text + `<span class="msg-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
+    div.innerHTML = `${html}<span class="msg-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
     chatMessages.appendChild(div);
     chatMessages.scrollTop = chatMessages.scrollHeight;
   };
-
-  const processQuery = (q) => {
+  const answer = (q) => {
     const query = q.toLowerCase();
-    let response = `I don't have that specific information in my context. For direct inquiries, feel free to email Aqib at <a href="mailto:aqibk1051@gmail.com">aqibk1051@gmail.com</a> or WhatsApp <a href="tel:+923363620708">+92 336 3620708</a>.`;
-
-    for (let intent of intents) {
-      if (intent.keys.some(k => query.includes(k))) {
-        response = intent.ans;
-        break;
-      }
-    }
-
-    setTimeout(() => {
-      appendMsg(response, 'bot');
-    }, 400);
+    const words = query.split(/[^a-z0-9+]+/);
+    const hit = intents.find((i) => i.keys.some((k) => (k.length <= 3 ? words.includes(k) : query.includes(k))));
+    const res = hit ? hit.ans : `I don't have that in my notes. Email Aqib at <a href="mailto:${EMAIL}">${EMAIL}</a> or WhatsApp <a href="tel:+923363620708">${PHONE}</a>.`;
+    setTimeout(() => appendMsg(res, 'bot'), 350);
   };
-
   const initChat = () => {
-    if (chatMessages && chatMessages.children.length === 0) {
-      appendMsg(`Hey there! 👋 Welcome to Aqib's digital playground. 🚀<br><br>I'm his AI sidekick, here to take you beyond the usual portfolio.<br><br>Curious about the apps he's built, the technologies behind them, or what he's working on next?<br><br>💬 <strong>Ask me anything.</strong> Let's explore what Aqib can build!`, "bot");
-      const suggestions = ["Featured Projects", "1Tap", "Space Cleaner", "Beef Burger Patties", "SkillBridge", "Tech Stack", "Mobile Apps", "Contact"];
-      if (chatChips) {
-        chatChips.innerHTML = '';
-        suggestions.forEach(s => {
-          const btn = document.createElement('button');
-          btn.textContent = s;
-          btn.onclick = () => {
-            appendMsg(s, 'user');
-            processQuery(s);
-          };
-          chatChips.appendChild(btn);
-        });
-      }
-    }
-  };
-
-  if (chatToggle) {
-    chatToggle.onclick = () => {
-      chatOpen = !chatOpen;
-      if (chatOpen) {
-        chatPanel.classList.add('open');
-        initChat();
-      } else {
-        chatPanel.classList.remove('open');
-      }
-    };
-  }
-
-  if (chatClose) {
-    chatClose.onclick = () => {
-      chatOpen = false;
-      if (chatPanel) chatPanel.classList.remove('open');
-    };
-  }
-
-  if (chatClear) {
-    chatClear.onclick = () => {
-      if (chatMessages) chatMessages.innerHTML = '';
-      initChat();
-    };
-  }
-
-  const handleSend = () => {
-    if (!chatInput) return;
-    const val = chatInput.value.trim();
-    if (val) {
-      appendMsg(val, 'user');
-      chatInput.value = '';
-      processQuery(val);
-    }
-  };
-
-  if (chatSend) chatSend.onclick = handleSend;
-  if (chatInput) {
-    chatInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        handleSend();
-      }
+    if (chatMessages.children.length) return;
+    appendMsg(welcome, 'bot');
+    chatChips.innerHTML = '';
+    ['Projects', '1Tap', 'SkillBridge', 'Tech stack', 'Experience', 'Contact'].forEach((s) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = s;
+      b.addEventListener('click', () => { appendMsg(s, 'user'); answer(s); });
+      chatChips.appendChild(b);
     });
-  }
+  };
+  const setChat = (open) => {
+    chatOpen = open;
+    chatPanel.classList.toggle('open', open);
+    chatPanel.setAttribute('aria-hidden', String(!open));
+    chatToggle.setAttribute('aria-expanded', String(open));
+    if (open) { initChat(); setTimeout(() => chatInput.focus({ preventScroll: true }), 300); }
+  };
+  function closeChat() { if (chatOpen) setChat(false); }
+  chatToggle.addEventListener('click', () => setChat(!chatOpen));
+  $('#chatClose').addEventListener('click', () => setChat(false));
+  $('#chatClear').addEventListener('click', () => { chatMessages.innerHTML = ''; initChat(); });
+  const send = () => {
+    const v = chatInput.value.trim();
+    if (!v) return;
+    appendMsg(v.replace(/</g, '&lt;'), 'user');
+    chatInput.value = '';
+    answer(v);
+  };
+  $('#chatSend').addEventListener('click', send);
+  chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); send(); } });
 
-  // Real contact form message delivery integration
-  const contactForm = document.getElementById('contactForm');
-  const formStatus = document.getElementById('formStatus');
-  const formSubmitBtn = contactForm ? contactForm.querySelector('button[type="submit"]') : null;
-
-  if (contactForm) {
-    contactForm.onsubmit = async (e) => {
+  /* ===================================================
+     Contact form (delivers via FormSubmit to the same inbox)
+     =================================================== */
+  const form = $('#contactForm');
+  const status = $('#formStatus');
+  if (form) {
+    const btn = $('button[type="submit"]', form);
+    const say = (msg, err) => { status.textContent = msg; status.classList.toggle('err', !!err); };
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const nameInput = document.getElementById('formName');
-      const emailInput = document.getElementById('formEmail');
-      const messageInput = document.getElementById('formMessage');
-
-      const name = nameInput ? nameInput.value.trim() : '';
-      const email = emailInput ? emailInput.value.trim() : '';
-      const message = messageInput ? messageInput.value.trim() : '';
-
-      if (!name || !email || !message) {
-        if (formStatus) {
-          formStatus.style.display = 'block';
-          formStatus.style.background = 'rgba(239, 68, 68, 0.12)';
-          formStatus.style.border = '1px solid rgba(239, 68, 68, 0.35)';
-          formStatus.style.color = '#fca5a5';
-          formStatus.textContent = 'Please fill out all fields before submitting.';
-        }
-        return;
-      }
-
-      let originalBtnHtml = '';
-      if (formSubmitBtn) {
-        originalBtnHtml = formSubmitBtn.innerHTML;
-        formSubmitBtn.disabled = true;
-        formSubmitBtn.innerHTML = `<span>Sending message...</span>`;
-      }
-
-      if (formStatus) {
-        formStatus.style.display = 'none';
-      }
-
+      const name = $('#formName').value.trim();
+      const email = $('#formEmail').value.trim();
+      const message = $('#formMessage').value.trim();
+      if (!name || !email || !message) return say('Please fill in all three fields.', true);
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return say('Please enter a valid email address.', true);
+      const label = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<span>Sending…</span>';
+      say('');
       try {
-        const response = await fetch('https://formsubmit.co/ajax/aqibk1051@gmail.com', {
+        const res = await fetch(`https://formsubmit.co/ajax/${EMAIL}`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            name: name,
-            email: email,
-            message: message,
-            _subject: `New Portfolio Message from ${name}`
-          })
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ name, email, message, _subject: `New portfolio message from ${name}` })
         });
-
-        if (response.ok) {
-          if (formStatus) {
-            formStatus.style.display = 'block';
-            formStatus.style.background = 'rgba(0, 255, 170, 0.12)';
-            formStatus.style.border = '1px solid rgba(0, 255, 170, 0.35)';
-            formStatus.style.color = 'var(--accent-emerald)';
-            formStatus.innerHTML = `<strong>Message sent successfully!</strong> Thank you ${name}, Aqib will get back to you shortly. You can also reach out directly at <a href="mailto:aqibk1051@gmail.com" style="color: #fff; text-decoration: underline;">aqibk1051@gmail.com</a>.`;
-          }
-          contactForm.reset();
-        } else {
-          throw new Error(`Server returned status ${response.status}`);
-        }
+        if (!res.ok) throw new Error(`Status ${res.status}`);
+        say(`Thanks ${name} — your note is in the air. Aqib will reply soon.`);
+        form.reset();
       } catch (err) {
-        console.error('Contact form submission error:', err);
-        if (formStatus) {
-          formStatus.style.display = 'block';
-          formStatus.style.background = 'rgba(239, 68, 68, 0.12)';
-          formStatus.style.border = '1px solid rgba(239, 68, 68, 0.35)';
-          formStatus.style.color = '#fca5a5';
-          formStatus.innerHTML = `Unable to send message right now. Please email Aqib directly at <a href="mailto:aqibk1051@gmail.com" style="color:#fff; text-decoration:underline;">aqibk1051@gmail.com</a> or WhatsApp <a href="tel:+923363620708" style="color:#fff; text-decoration:underline;">+92 336 3620708</a>.`;
-        }
+        console.error('Contact form error:', err);
+        say(`Couldn't send right now. Please email ${EMAIL} directly.`, true);
       } finally {
-        if (formSubmitBtn) {
-          formSubmitBtn.disabled = false;
-          formSubmitBtn.innerHTML = originalBtnHtml;
-        }
-      }
-    };
-  }
-
-  // Mobile menu button & responsive navigation
-  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-  const navLinks = document.querySelector('.nav-links');
-
-  if (mobileMenuBtn && navLinks) {
-    mobileMenuBtn.addEventListener('click', () => {
-      if (navLinks.style.display === 'flex') {
-        navLinks.style.display = 'none';
-      } else {
-        navLinks.style.display = 'flex';
-        navLinks.style.flexDirection = 'column';
-        navLinks.style.position = 'absolute';
-        navLinks.style.top = '70px';
-        navLinks.style.left = '24px';
-        navLinks.style.right = '24px';
-        navLinks.style.background = 'rgba(10, 8, 20, 0.96)';
-        navLinks.style.border = '1px solid rgba(255,255,255,0.1)';
-        navLinks.style.borderRadius = '16px';
-        navLinks.style.padding = '20px';
-        navLinks.style.gap = '16px';
+        btn.disabled = false;
+        btn.innerHTML = label;
       }
     });
-
-    // Close mobile nav when any link is tapped
-    navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        if (window.innerWidth <= 768) {
-          navLinks.style.display = 'none';
-        }
-      });
-    });
   }
-};
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initPortfolio);
-} else {
-  initPortfolio();
-}
+})();
