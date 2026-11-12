@@ -14,8 +14,22 @@
   <link rel="canonical" href="https://aqibkhn.space/portfolio.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Great+Vibes&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap">
-  <link rel="preload" as="image" href="assets/portrait.webp">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@500;600&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@500;600&family=Inter:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+  <!-- Great Vibes is only used for "Hello, I'm": load just those glyphs -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&text=Hello%2C%20I'm&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Great+Vibes&family=Oswald:wght@500;600&family=Inter:wght@400;500;600&display=swap"></noscript>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preload" as="image" href="assets/portrait.webp" imagesrcset="assets/portrait-560.webp 560w, assets/portrait.webp 998w" imagesizes="(max-width: 760px) 80vw, 39vw" fetchpriority="high">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Muhammad Aqib — Web &amp; Mobile Application Developer">
+  <meta name="twitter:description" content="Services, live projects, experience and contact for Muhammad Aqib, a web and mobile developer based in Islamabad.">
+  <meta name="twitter:image" content="https://aqibkhn.space/assets/profile.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Muhammad Aqib","jobTitle":"Web and Mobile Application Developer","url":"https://aqibkhn.space/","image":"https://aqibkhn.space/assets/profile.jpg","email":"mailto:aqibk1051@gmail.com","address":{"@type":"PostalAddress","addressLocality":"Islamabad","addressCountry":"PK"},"alumniOf":{"@type":"CollegeOrUniversity","name":"Bahria University Islamabad"},"knowsAbout":["Flutter","Firebase","React","Next.js","TypeScript","Node.js","Supabase"],"sameAs":["https://github.com/10-aqib","https://www.linkedin.com/in/aqib10","https://www.instagram.com/aqibkhn._"]}</script>
   <script>
     (function () {
       var d = document.documentElement;
@@ -76,7 +90,7 @@
         <svg class="word" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true">
           <text x="0" y="296" textLength="1000" lengthAdjust="spacingAndGlyphs">PORTFOLIO</text>
         </svg>
-        <img class="portrait" src="assets/portrait.webp" width="998" height="1100" alt="Muhammad Aqib" fetchpriority="high">
+        <img class="portrait" src="assets/portrait.webp" srcset="assets/portrait-560.webp 560w, assets/portrait.webp 998w" sizes="(max-width: 760px) 80vw, 39vw" width="998" height="1100" alt="Muhammad Aqib, smiling, in a black T-shirt" fetchpriority="high" decoding="async">
 
         <div class="hero-id">
           <p class="hello" data-h="hello">Hello, I'm</p>

@@ -25,7 +25,7 @@
   const PROJECTS = [
     {
       slug: '1tap', name: '1Tap', kind: 'Real-time web app', featured: true,
-      mobile: 'assets/projects/mobile-1tap.webp', desktop: 'assets/projects/1tap.jpg',
+      mobile: 'assets/projects/mobile-1tap.webp', mh: 1147, desktop: 'assets/projects/1tap.jpg', dw: 800, dh: 502,
       summary: 'Move text, links and files between devices — no account, no signup.',
       body: [
         'Join a shared room over the same Wi-Fi, or pair privately with a room code or QR code. Whatever you drop in shows up on the other device a moment later.',
@@ -38,7 +38,7 @@
     },
     {
       slug: 'beef-burger-patties', name: 'Beef Burger Patties', kind: 'Restaurant ordering app', featured: true,
-      mobile: 'assets/projects/mobile-beef-burger.webp', desktop: 'assets/projects/beef-burger.jpg',
+      mobile: 'assets/projects/mobile-beef-burger.webp', mh: 4155, desktop: 'assets/projects/beef-burger.jpg', dw: 800, dh: 502,
       summary: 'A cinematic burger restaurant site with online ordering, built for customers in Pakistan.',
       body: [
         'A food-focused interface with a responsive ordering experience. Customers build a burger topping by topping, add kitchen notes, manage a cart and find branches across Pakistan.',
@@ -51,7 +51,7 @@
     },
     {
       slug: 'space-cleaner', name: 'Space Cleaner', kind: 'Storage tool', featured: true,
-      mobile: 'assets/projects/mobile-space-cleaner.webp', desktop: 'assets/projects/space-cleaner.jpg',
+      mobile: 'assets/projects/mobile-space-cleaner.webp', mh: 1038, desktop: 'assets/projects/space-cleaner.jpg', dw: 800, dh: 500,
       summary: 'Finds duplicate, unused and heavy files and shows where your disk space went.',
       body: [
         'Space Cleaner scans for duplicate, unused and large files so you can clear what you don’t need in a tap.',
@@ -59,7 +59,7 @@
       ],
       highlights: ['Detects duplicate, unused and heavy files', 'Interactive D3 storage maps', 'Virtualized file list for large folders', 'Keyboard command palette'],
       role: 'Designed and built end to end',
-      stack: ['React', 'TypeScript', 'Vite', 'D3.js', 'TanStack Virtual', 'Zustand'],
+      stack: ['React', 'TypeScript', 'Vite', 'D3.js', 'TanStack Virtual', 'Zustand', 'Tauri'],
       live: 'https://space-cleaner.vercel.app', repos: [{ label: 'Source', url: `${GH}/Cleaner` }]
     },
     {
@@ -68,11 +68,11 @@
       summary: 'Connects people with reliable local skilled workers and service providers.',
       body: [
         'SkillBridge is a mobile platform that connects customers with local skilled workers and mentors for everyday services.',
-        'The Flutter app is built on Firebase, with a companion Next.js website that introduces the product. It isn’t publicly deployed yet, so it’s shared here as a case study with its source code.'
+        'The Flutter app is built on Firebase (Auth, Firestore, Storage and Cloud Messaging) with Riverpod for state. A companion Next.js website, backed by Supabase, introduces the product. It isn’t publicly deployed yet, so it’s shared here as a case study with its source code.'
       ],
       highlights: ['Cross-platform Flutter mobile app', 'Firebase back end', 'Companion Next.js landing site'],
       role: 'Designed and built the app and site',
-      stack: ['Flutter', 'Dart', 'Firebase', 'Next.js', 'TypeScript'],
+      stack: ['Flutter', 'Dart', 'Firebase', 'Riverpod', 'Next.js', 'Supabase'],
       live: null, repos: [{ label: 'Flutter app', url: `${GH}/SkillBridge-` }, { label: 'Website', url: `${GH}/skillBridge-Website` }]
     },
     {
@@ -107,12 +107,12 @@
       summary: 'An e-commerce website for a local mart in F-8, Islamabad.',
       body: [
         'Built for Infinity Basket, a mart in F-8, to give its customers a digital shopping experience.',
-        'One of the projects I delivered for local businesses in Islamabad.'
+        'One of the projects I delivered for local businesses in Islamabad. The client’s source code isn’t public; the GitHub repository holds project notes only.'
       ],
       highlights: ['Online store for a local business', 'Responsive design for phones and desktops'],
       role: 'Client project',
       stack: ['E-commerce', 'Responsive design'],
-      live: null, repos: [{ label: 'Source', url: `${GH}/Infinity-Basket-Mart` }]
+      live: null, repos: [{ label: 'Project notes', url: `${GH}/Infinity-Basket-Mart` }]
     }
   ];
 
@@ -122,7 +122,7 @@
     <div class="work-item" data-r="card">
       <button class="phone work-phone" type="button" data-open="${p.slug}" aria-label="Open ${esc(p.name)} case study">
         <i class="notch" aria-hidden="true"></i>
-        <span class="screen"><img src="${p.mobile}" alt="${esc(p.name)} on a phone" loading="lazy" decoding="async"></span>
+        <span class="screen"><img src="${p.mobile}" srcset="${p.mobile.replace('.webp', '-300.webp')} 300w, ${p.mobile} 480w" sizes="(max-width: 760px) 228px, 21vw" width="480" height="${p.mh}" alt="${esc(p.name)} on a phone" loading="lazy" decoding="async"></span>
         <span class="live-dot">Live</span>
         <span class="badge">View project ${icon('arrow')}</span>
       </button>
@@ -199,8 +199,8 @@
     ].join('');
     const media = p.desktop
       ? `<div class="p-media">
-          <figure class="p-desktop" style="margin:0"><div class="bar"><i></i><i></i><i></i><span>${esc(p.live.replace('https://', ''))}</span></div><img src="${p.desktop}" alt="${esc(p.name)} on desktop" loading="lazy"></figure>
-          <div class="p-mobile"><i class="notch" aria-hidden="true"></i><img src="${p.mobile}" alt="${esc(p.name)} on a phone" loading="lazy"></div>
+          <figure class="p-desktop" style="margin:0"><div class="bar"><i></i><i></i><i></i><span>${esc(p.live.replace('https://', ''))}</span></div><img src="${p.desktop}" width="${p.dw}" height="${p.dh}" alt="${esc(p.name)} on desktop" loading="lazy" decoding="async"></figure>
+          <div class="p-mobile"><i class="notch" aria-hidden="true"></i><img src="${p.mobile}" srcset="${p.mobile.replace('.webp', '-300.webp')} 300w, ${p.mobile} 480w" sizes="220px" width="480" height="${p.mh}" alt="${esc(p.name)} on a phone" loading="lazy" decoding="async"></div>
         </div>`
       : `<div class="p-cover" aria-hidden="true"><b>${esc(p.cover)}</b><span>${esc(p.kind)}</span></div>`;
     $('#projBody').innerHTML = `
@@ -262,7 +262,8 @@
       if (!t) return;
       if (lenis) lenis.scrollTo(t, { duration: 1.4 }); else t.scrollIntoView({ behavior: 'smooth' });
     },
-    isSheetOpen: () => !!openSheet
+    isSheetOpen: () => !!openSheet,
+    get lenis() { return lenis; }
   };
 
   /* ---------- Menu ---------- */
@@ -346,7 +347,11 @@
   $$('[id]', ghost).forEach((n) => n.removeAttribute('id'));
   $$('a, button', ghost).forEach((n) => n.setAttribute('tabindex', '-1'));
   $('img', ghost).removeAttribute('fetchpriority');
-  $('#ctaBg').appendChild(ghost);
+  $('img', ghost).setAttribute('loading', 'lazy');
+  // Cloned now (before the hero is split for animation) but only inserted when the
+  // closing section approaches: laying out + blurring a second hero at load was costly.
+  let ghostMounted = false;
+  const mountGhost = () => { if (ghostMounted) return; ghostMounted = true; $('#ctaBg').appendChild(ghost); };
 
   /* ----------------------------------------------------------
      Bridge to the 3D desk (parent window)
@@ -377,13 +382,16 @@
   /* ----------------------------------------------------------
      Motion — entrance timeline + scroll reveals (GSAP)
      ---------------------------------------------------------- */
-  const boot = () => {
+  // Yield to the browser between setup phases so startup isn't one long blocking task.
+  const yieldNow = () => new Promise((r) => (window.scheduler && scheduler.yield ? scheduler.yield().then(r) : setTimeout(r, 0)));
+  const boot = async () => {
     const gsap = window.gsap;
     const ST = window.ScrollTrigger;
-    if (!gsap || reduce) { root.classList.remove('anim'); return; }
+    if (!gsap || reduce) { root.classList.remove('anim'); mountGhost(); return; }
     if (ST) gsap.registerPlugin(ST);
     const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     const stacked = window.matchMedia('(max-width: 760px), (max-aspect-ratio: 4/5)');
+    const phone = stacked.matches && !embedded; // phone/portrait layout at load
 
     /* ---- helpers ---- */
     // Text decode: characters resolve left-to-right out of random glyphs.
@@ -399,9 +407,17 @@
       if (el.__scr) el.__scr.kill();
       const total = nodes.reduce((a, n) => a + n.__final.length, 0);
       const st = { p: 0 };
+      let lastT = 0;
+      // Keep the per-update relayout inside this element while it decodes.
+      const block = getComputedStyle(el).display !== 'inline';
       el.__scr = gsap.to(st, {
         p: 1, duration, delay, ease: 'none',
+        onStart: () => { if (block) el.style.contain = 'layout style'; },
         onUpdate: () => {
+          // Throttle to ~22 updates/s: each text write triggers style + layout.
+          const t = performance.now();
+          if (t - lastT < 45 && st.p < 1) return;
+          lastT = t;
           let idx = 0;
           nodes.forEach((n) => {
             const f = n.__final;
@@ -414,7 +430,7 @@
             n.textContent = out;
           });
         },
-        onComplete: () => nodes.forEach((n) => { n.textContent = n.__final; })
+        onComplete: () => { nodes.forEach((n) => { n.textContent = n.__final; }); if (block) el.style.contain = ''; }
       });
     }
     const splitChars = (el) => {
@@ -466,17 +482,72 @@
     // 3D tilt + lift that follows the pointer (desktop only).
     const tilt = (el, max = 8) => {
       if (!fine) return;
+      // Measure once per hover (not on every pointermove) to avoid forced layouts.
+      let r = null;
+      el.addEventListener('pointerenter', () => { r = el.getBoundingClientRect(); });
       el.addEventListener('pointermove', (e) => {
-        const r = el.getBoundingClientRect();
+        if (!r) r = el.getBoundingClientRect();
         const x = (e.clientX - r.left) / r.width - 0.5;
         const y = (e.clientY - r.top) / r.height - 0.5;
         gsap.to(el, { rotationY: x * max, rotationX: -y * max, y: -8, transformPerspective: 900, duration: 0.45, ease: 'power2.out', overwrite: 'auto' });
       });
-      el.addEventListener('pointerleave', () => gsap.to(el, { rotationY: 0, rotationX: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.6)', overwrite: 'auto', clearProps: 'transform' }));
+      el.addEventListener('pointerleave', () => { r = null; gsap.to(el, { rotationY: 0, rotationX: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.6)', overwrite: 'auto', clearProps: 'transform' }); });
     };
+    // One-shot reveals use IntersectionObserver (no layout measurement or
+    // ScrollTrigger refresh cost). 'top 72%' → fire when the element's top
+    // crosses 72% of the viewport height.
+    // Sections set their "before" animation states lazily, when they come within
+    // 1.5 screens of the viewport — not at load. Writing ~250 elements' styles at
+    // boot caused per-element style recalculation (layout thrashing).
+    const once = (fn) => { let done = false; return () => { if (!done) { done = true; fn(); } }; };
+    const nearIO = 'IntersectionObserver' in window
+      ? new IntersectionObserver((entries, obs) => entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        obs.unobserve(en.target);
+        if (en.target.__near) en.target.__near();
+      }), { rootMargin: '0px 0px 150% 0px' })
+      : null;
+    // After load, prepare remaining sections one per idle period so the work is
+    // done before the visitor scrolls there (not during their scroll).
+    const idleQueue = [];
+    const idle = window.requestIdleCallback || ((cb) => setTimeout(() => cb({ timeRemaining: () => 8 }), 200));
+    const drainIdle = () => {
+      if (!idleQueue.length) return;
+      idle((deadline) => {
+        while (idleQueue.length && deadline.timeRemaining() > 4) idleQueue.shift()();
+        drainIdle();
+      }, { timeout: 4000 });
+    };
+    const startIdlePrep = () => setTimeout(drainIdle, 1500);
+    if (document.readyState === 'complete') startIdlePrep(); else addEventListener('load', startIdlePrep, { once: true });
+    const prepare = (sec, box, fn) => {
+      box.classList.add('prep-wait');
+      const run = once(() => { fn(); box.classList.remove('prep-wait'); });
+      if (nearIO) { sec.__near = run; nearIO.observe(sec); } else run();
+      idleQueue.push(run);
+      return run;
+    };
+    const observers = new Map();
     const onEnter = (trigger, fn, start = 'top 72%') => {
-      if (!ST) { fn(); return; }
-      ST.create({ trigger, start, once: true, onEnter: fn });
+      const el = typeof trigger === 'string' ? $(trigger) : trigger;
+      if (!el) return;
+      if (!('IntersectionObserver' in window)) { fn(); return; }
+      const pct = parseFloat(String(start).split(' ')[1]) || 72;
+      const key = pct;
+      if (!observers.has(key)) {
+        observers.set(key, new IntersectionObserver((entries, obs) => {
+          entries.forEach((en) => {
+            if (!en.isIntersecting) return;
+            obs.unobserve(en.target);
+            const cb = en.target.__onEnter;
+            en.target.__onEnter = null;
+            if (cb) cb();
+          });
+        }, { rootMargin: `0px 0px -${100 - pct}% 0px`, threshold: 0 }));
+      }
+      const prev = el.__onEnter;
+      el.__onEnter = prev ? () => { prev(); fn(); } : fn;
+      observers.get(key).observe(el);
     };
 
     /* ================= HERO ================= */
@@ -506,7 +577,11 @@
     const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
     tl.fromTo(q('.word'), { clipPath: 'inset(0 100% 0 0)', scaleX: 1.08, transformOrigin: '0% 50%' }, { clipPath: 'inset(0 0% 0 0)', scaleX: 1, duration: 1.4, ease: 'power3.inOut' })
       .fromTo(q('.word text'), { fill: '#d8ccbd' }, { fill: '#A99B8D', duration: 1.2, ease: 'power1.out' }, 0.5)
-      .fromTo(q('.portrait'), { autoAlpha: 0, y: 70, scale: 0.94, transformOrigin: '50% 100%' }, { autoAlpha: 1, y: 0, scale: 1, duration: 1.2 }, '-=0.5')
+      // Phones: the photo is visible from the first paint and only rises into place
+      // (it's the largest element, so hiding it delayed Largest Contentful Paint).
+      .fromTo(q('.portrait'), phone
+        ? { y: 40, scale: 0.97, transformOrigin: '50% 100%' }
+        : { autoAlpha: 0, y: 70, scale: 0.94, transformOrigin: '50% 100%' }, { autoAlpha: 1, y: 0, scale: 1, duration: 1.2 }, phone ? 0 : 0.45)
       .fromTo(q('.hello'), { autoAlpha: 0, clipPath: 'inset(0 100% 0 0)' }, { autoAlpha: 1, clipPath: 'inset(-20% -4% -20% 0)', duration: 0.9, ease: 'power2.inOut' }, '-=0.6')
       .set(q('.name'), { autoAlpha: 1 }, '-=0.45')
       .fromTo(nameChars, { yPercent: 110 }, { yPercent: 0, duration: 0.75, ease: 'power4.out', stagger: 0.035 }, '<')
@@ -524,23 +599,28 @@
       .fromTo(q('.cta'), { autoAlpha: 0, y: 18, scale: 0.9 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.6, ease: 'back.out(1.8)', clearProps: 'transform' }, '-=0.5')
       .add(() => { gsap.to(q('.cta i'), { x: 4, duration: 0.6, ease: 'sine.inOut', repeat: 5, yoyo: true }); });
     tl.timeScale(1.2);
+    // Fonts are needed for the hero type, but never wait more than ~0.9s for them.
+    const fontsOrTimeout = () => Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), new Promise((r) => setTimeout(r, 900))]);
     startIntro = () => {
       startIntro = null;
-      (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => {
-        // Standalone visits open with a short curtain + counter (the 3D desk has its own loader).
-        if (embedded) { tl.play(); return; }
-        const cur = document.createElement('div');
-        cur.className = 'curtain';
-        cur.setAttribute('aria-hidden', 'true');
-        cur.innerHTML = '<span class="curtain-label">Muhammad Aqib — Portfolio</span><b class="curtain-num">000</b>';
-        document.body.appendChild(cur);
-        const num = $('.curtain-num', cur);
-        const c = { v: 0 };
+      // Inside the 3D desk the desk has its own loader.
+      if (embedded) { fontsOrTimeout().then(() => tl.play()); return; }
+      // Phones skip the curtain: the intro starts right away.
+      if (phone) { tl.play(); return; }
+      // Standalone: the curtain shows immediately and counts while fonts load.
+      const cur = document.createElement('div');
+      cur.className = 'curtain';
+      cur.setAttribute('aria-hidden', 'true');
+      cur.innerHTML = '<span class="curtain-label">Muhammad Aqib — Portfolio</span><b class="curtain-num">000</b>';
+      document.body.appendChild(cur);
+      const num = $('.curtain-num', cur);
+      const c = { v: 0 };
+      scramble($('.curtain-label', cur), { duration: 0.8 });
+      const count = gsap.to(c, { v: 100, duration: 0.85, ease: 'power2.inOut', onUpdate: () => { num.textContent = String(Math.round(c.v)).padStart(3, '0'); } });
+      Promise.all([fontsOrTimeout(), count.then()]).then(() => {
         gsap.timeline()
-          .add(() => scramble($('.curtain-label', cur), { duration: 0.9 }))
-          .to(c, { v: 100, duration: 1.05, ease: 'power2.inOut', onUpdate: () => { num.textContent = String(Math.round(c.v)).padStart(3, '0'); } }, 0)
-          .to(cur, { yPercent: -100, duration: 0.95, ease: 'expo.inOut' }, 1.15)
-          .add(() => tl.play(), 1.35)
+          .to(cur, { yPercent: -100, duration: 0.85, ease: 'expo.inOut' })
+          .add(() => tl.play(), 0.2)
           .add(() => cur.remove());
       });
     };
@@ -558,6 +638,8 @@
       });
     }
 
+    await yieldNow(); // hero is set up; let the browser paint before the rest
+
     /* ================= SMOOTH SCROLL (Lenis) ================= */
     if (window.Lenis) {
       // lerp-based smoothing stays responsive (duration-based easing felt laggy/stuck).
@@ -565,7 +647,8 @@
       if (ST) lenis.on('scroll', ST.update);
       gsap.ticker.add((t) => lenis.raf(t * 1000));
       gsap.ticker.lagSmoothing(0);
-      root.classList.add('has-lenis');
+      // Note: Lenis strips any class containing "lenis", so use a neutral name.
+      root.classList.add('ls-on');
       document.addEventListener('click', (e) => {
         const a = e.target.closest('a[href^="#"]');
         if (!a || e.defaultPrevented) return;
@@ -629,7 +712,7 @@
       // Velocity response: scroll events only store a target; one ticker eases toward it.
       // (Creating tweens on every scroll event was causing jank.)
       const setSkew = tracks.map((t) => gsap.quickSetter(t, 'skewX', 'deg'));
-      let target = 0, cur = 0, dir = 1, visible = false;
+      let target = 0, cur = 0, dir = 1, visible = false, lastSkew = 0;
       ST.create({
         trigger: mq, start: 'top bottom', end: 'bottom top',
         onToggle: (self) => { visible = self.isActive; tA.paused(!visible); tB.paused(!visible); },
@@ -642,12 +725,13 @@
         if (Math.abs(cur) < 0.001) cur = 0;
         const ts = dir * (1 + Math.abs(cur));
         tA.timeScale(ts); tB.timeScale(ts);
-        const sk = -cur * 1.1;
-        setSkew.forEach((s) => s(sk));
+        const sk = Math.round(-cur * 110) / 100;
+        if (sk !== lastSkew) { lastSkew = sk; setSkew.forEach((s) => s(sk)); }
       });
     }
 
-    if (!ST) return;
+    if (!ST) { mountGhost(); return; }
+    await yieldNow();
 
     // Continuous motion only runs while its section is on screen.
     ST.create({ trigger: '#home', start: 'top bottom', end: 'bottom top', onToggle: (s) => orbitWrap.classList.toggle('paused', !s.isActive) });
@@ -655,7 +739,7 @@
 
     // Small labels decode as they scroll into view.
     $$('.kicker, .when, .work-label small, .status, .cta-small, .facts span, .org, .service li, .more-open').forEach((el) => {
-      ST.create({ trigger: el, start: 'top 88%', once: true, onEnter: () => scramble(el, { duration: 0.9, delay: 0.35 }) });
+      onEnter(el, () => scramble(el, { duration: 0.9, delay: 0.35 }), 'top 88%');
     });
 
     // Thin reading-progress bar
@@ -673,21 +757,26 @@
     gsap.to($('.hero-list', hs), { y: -30, ease: 'none', scrollTrigger: out() });
     gsap.to($('.statement', hs), { y: -40, ease: 'none', scrollTrigger: out() });
 
+    await yieldNow();
     /* ================= SERVICES / EXPERTISE ================= */
     $$('.cards-sec').forEach((sec) => {
       const title = $('.title', sec);
       const cards = $$('.phone', sec);
-      gsap.set(title, { autoAlpha: 0 });
-      gsap.set(cards, { autoAlpha: 0, y: 90, rotate: (i) => [-5, 0, 5][i % 3], scale: 0.9 });
-      cards.forEach((c) => {
-        prepDraw(drawable($('.illus svg', c)));
-        gsap.set($$('.illus svg [fill]:not([fill="none"])', c), { autoAlpha: 0 });
-        gsap.set($('h3', c), { autoAlpha: 0, y: 14 });
-        gsap.set($('.divider', c), { scaleX: 0 });
-        gsap.set($$('li', c), { autoAlpha: 0, y: 10 });
-        gsap.set($$('.dots b', c), { scale: 0 });
+      const prep = prepare(sec, $('.stage', sec), () => {
+        gsap.set(title, { autoAlpha: 0 });
+        gsap.set(cards, { autoAlpha: 0, y: 90, rotate: (i) => [-5, 0, 5][i % 3], scale: 0.9 });
+        cards.forEach((c) => {
+          gsap.set($$('.illus svg [fill]:not([fill="none"])', c), { autoAlpha: 0 });
+          gsap.set($('h3', c), { autoAlpha: 0, y: 14 });
+          gsap.set($('.divider', c), { scaleX: 0 });
+          gsap.set($$('li', c), { autoAlpha: 0, y: 10 });
+          gsap.set($$('.dots b', c), { scale: 0 });
+        });
       });
       onEnter(sec, () => {
+        prep();
+        // Measure path lengths only when the section is revealed (cards are still hidden here).
+        cards.forEach((c) => prepDraw(drawable($('.illus svg', c))));
         const t = gsap.timeline({ defaults: { ease: 'power3.out' } });
         titleIn(title, t, 0);
         t.to(cards, { autoAlpha: 1, y: 0, rotate: 0, scale: 1, duration: 1, ease: 'power4.out', stagger: 0.16, clearProps: 'transform' }, 0.2);
@@ -708,9 +797,12 @@
     const work = $('#work');
     const wTitle = $('.title', work);
     const wItems = $$('.work-item', work);
-    gsap.set(wTitle, { autoAlpha: 0 });
-    gsap.set(wItems, { autoAlpha: 0 });
+    const prepWork = prepare(work, $('.stage', work), () => {
+      gsap.set(wTitle, { autoAlpha: 0 });
+      gsap.set(wItems, { autoAlpha: 0 });
+    });
     onEnter(work, () => {
+      prepWork();
       const t = gsap.timeline({ defaults: { ease: 'power3.out' } });
       titleIn(wTitle, t, 0);
       wItems.forEach((it, i) => {
@@ -729,10 +821,13 @@
     const more = $('.more-sec');
     const mTitle = $('.title', more);
     const mCards = $$('.more-card', more);
-    gsap.set(mTitle, { autoAlpha: 0 });
-    gsap.set($$('.sec-lede, .more-foot', more), { autoAlpha: 0, y: 16 });
-    gsap.set(mCards, { autoAlpha: 0, y: 60, rotationX: -35, transformPerspective: 900, transformOrigin: '50% 100%' });
+    const prepMore = prepare(more, $('.wrap', more), () => {
+      gsap.set(mTitle, { autoAlpha: 0 });
+      gsap.set($$('.sec-lede, .more-foot', more), { autoAlpha: 0, y: 16 });
+      gsap.set(mCards, { autoAlpha: 0, y: 60, rotationX: -35, transformPerspective: 900, transformOrigin: '50% 100%' });
+    });
     onEnter(more, () => {
+      prepMore();
       const t = gsap.timeline({ defaults: { ease: 'power3.out' } });
       titleIn(mTitle, t, 0);
       t.to($('.sec-lede', more), { autoAlpha: 1, y: 0, duration: 0.6 }, 0.3)
@@ -742,15 +837,26 @@
     }, 'top 78%');
     mCards.forEach((c) => tilt(c, 7));
 
+    await yieldNow();
     /* ================= STORY ================= */
     const story = $('#story');
     const sTitle = $('.title', story);
-    gsap.set(sTitle, { autoAlpha: 0 });
     const leadWords = splitWords($('.about-lead', story));
     const aboutRest = $$('.about > .kicker, .about > p:not(.about-lead), .facts li, .resume-btns > *', story);
-    gsap.set(leadWords, { yPercent: 110 });
-    gsap.set(aboutRest, { autoAlpha: 0, y: 18 });
+    const kickers = $$('.timeline-col > .kicker', story);
+    const edu = $('.edu', story);
+    const badge = $('.edu-badge', story);
+    const prepStory = prepare(story, $('.wrap', story), () => {
+      gsap.set(sTitle, { autoAlpha: 0 });
+      gsap.set(leadWords, { yPercent: 110 });
+      gsap.set(aboutRest, { autoAlpha: 0, y: 18 });
+      gsap.set($$('.timeline li', story), { autoAlpha: 0, x: 50 });
+      gsap.set(kickers, { autoAlpha: 0, x: -16 });
+      gsap.set(edu, { autoAlpha: 0, y: 30 });
+      gsap.set(badge, { scale: 0.6, rotate: -8, autoAlpha: 0 });
+    });
     onEnter(story, () => {
+      prepStory();
       const t = gsap.timeline({ defaults: { ease: 'power3.out' } });
       titleIn(sTitle, t, 0);
       t.to(leadWords, { yPercent: 0, duration: 0.7, ease: 'power4.out', stagger: 0.025 }, 0.25)
@@ -765,20 +871,15 @@
     tline.classList.add('has-line');
     gsap.fromTo(lineEl, { scaleY: 0 }, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: tline, start: 'top 75%', end: 'bottom 55%', scrub: 0.5 } });
     $$('.timeline li', story).forEach((li) => {
-      gsap.set(li, { autoAlpha: 0, x: 50 });
       onEnter(li, () => {
+        prepStory();
         gsap.to(li, { autoAlpha: 1, x: 0, duration: 0.8, ease: 'power3.out', clearProps: 'transform' });
         li.classList.add('dot-in');
       }, 'top 85%');
     });
-    const kickers = $$('.timeline-col > .kicker', story);
-    gsap.set(kickers, { autoAlpha: 0, x: -16 });
-    kickers.forEach((k) => onEnter(k, () => gsap.to(k, { autoAlpha: 1, x: 0, duration: 0.6 }), 'top 88%'));
-    const edu = $('.edu', story);
-    const badge = $('.edu-badge', story);
-    gsap.set(edu, { autoAlpha: 0, y: 30 });
-    gsap.set(badge, { scale: 0.6, rotate: -8, autoAlpha: 0 });
+    kickers.forEach((k) => onEnter(k, () => { prepStory(); gsap.to(k, { autoAlpha: 1, x: 0, duration: 0.6 }); }, 'top 88%'));
     onEnter(edu, () => {
+      prepStory();
       gsap.to(edu, { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power3.out', clearProps: 'transform' });
       gsap.to(badge, { scale: 1, rotate: 0, autoAlpha: 1, duration: 0.8, ease: 'back.out(2)', delay: 0.35 });
     }, 'top 88%');
@@ -792,12 +893,16 @@
     const ctaSmall = $('.cta-small', cta);
     const ctaBtn = $('#workBtn');
     const ctaLinks = $$('.cta-links li', cta);
-    gsap.set(ctaSmall, { autoAlpha: 0, letterSpacing: '0.5em' });
-    gsap.set(bigChars, { yPercent: 120, autoAlpha: 0 });
-    gsap.set(ctaBtn, { autoAlpha: 0, scale: 0.7 });
-    gsap.set(ctaLinks, { autoAlpha: 0, y: 14 });
-    gsap.set($('.copy', cta), { autoAlpha: 0 });
+    const prepCta = prepare(cta, $('.cta-fg', cta), () => {
+      mountGhost();
+      gsap.set(ctaSmall, { autoAlpha: 0, letterSpacing: '0.5em' });
+      gsap.set(bigChars, { yPercent: 120, autoAlpha: 0 });
+      gsap.set(ctaBtn, { autoAlpha: 0, scale: 0.7 });
+      gsap.set(ctaLinks, { autoAlpha: 0, y: 14 });
+      gsap.set($('.copy', cta), { autoAlpha: 0 });
+    });
     onEnter(cta, () => {
+      prepCta();
       gsap.timeline({ defaults: { ease: 'power3.out' } })
         .to(ctaSmall, { autoAlpha: 1, letterSpacing: '0.14em', duration: 1 }, 0)
         .to(bigChars, { yPercent: 0, autoAlpha: 1, duration: 0.8, ease: 'power4.out', stagger: { each: 0.025, from: 'center' } }, 0.2)
@@ -819,7 +924,13 @@
     addEventListener('load', () => ST.refresh(), { once: true });
   };
 
-  boot();
+  boot().catch((err) => {
+    // Never leave content hidden if motion setup fails: fall back to the static page.
+    console.error('[portfolio] motion setup failed, showing static layout:', err);
+    root.classList.remove('anim');
+    $$('.prep-wait').forEach((el) => el.classList.remove('prep-wait'));
+    mountGhost();
+  });
   if (document.readyState === 'complete') post({ type: 'portfolio:ready' });
   else addEventListener('load', () => post({ type: 'portfolio:ready' }), { once: true });
 })();

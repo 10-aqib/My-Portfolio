@@ -61,7 +61,7 @@
 }
 .ai-list .ai-act, .ai-bubble > .ai-act { height: auto; padding: 1px 8px; border-width: 1px; font-size: 11.5px; vertical-align: 1px; }
 .ai-act:hover { background: var(--brown); color: #F6EEDF; transform: translateY(-1px); }
-.ai-time { font: 500 10px var(--cond); letter-spacing: .08em; color: var(--muted); margin: 4px 4px 0; opacity: .8; }
+.ai-time { font: 500 11px var(--cond); letter-spacing: .08em; color: var(--muted); margin: 4px 4px 0; opacity: .8; }
 .ai-w { display: inline; }
 
 .ai-typing .ai-bubble { display: inline-flex; gap: 5px; padding: 14px 16px; }

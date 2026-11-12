@@ -25,7 +25,12 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; overscroll-behavior: none; scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: #8f7d6c transparent; }
+html { -webkit-text-size-adjust: 100%; overscroll-behavior: none; scrollbar-width: thin; scrollbar-color: #8f7d6c transparent; }
+/* Native smooth anchor scrolling only when Lenis isn't running (reduced motion / no JS).
+   With Lenis active, CSS smooth scrolling fights its per-frame scrollTo and freezes the page. */
+html:not(.lenis) { scroll-behavior: smooth; }
+.lenis.lenis-smooth, html.ls-on { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.55 var(--body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 /* Paper grain */
 body::before {
@@ -184,19 +189,19 @@ html.is-embedded .standalone-only { display: none !important; }
 .work-phone { display: block; width: calc(212 * var(--r)); height: calc(398 * var(--r)); cursor: pointer; transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
 .work-phone:hover, .work-phone:focus-visible { transform: translateY(calc(-8 * var(--r))); box-shadow: 0 calc(22 * var(--r)) calc(34 * var(--r)) calc(-12 * var(--r)) rgba(33,23,16,.55), inset 0 0 0 calc(1.5 * var(--r)) rgba(33,23,16,.15); }
 .screen { position: absolute; inset: calc(2 * var(--r)); border-radius: calc(17 * var(--r)); overflow: hidden; background: #fff; }
-.screen img { width: 100%; height: auto; max-width: none; will-change: transform; transition: scale .6s var(--ease); }
+.screen img { width: 100%; height: auto; max-width: none; transition: scale .6s var(--ease); }
 .anim .screen img.scrolls { animation: screen-scroll var(--dur, 18s) ease-in-out 1.2s infinite alternate; animation-play-state: paused; }
 .anim .work-sec.in-view .screen img.scrolls { animation-play-state: running; }
 @keyframes screen-scroll { 0%, 8% { transform: translateY(0); } 92%, 100% { transform: translateY(calc(-1 * var(--dist, 0px))); } }
 .work-phone:hover .screen img { scale: 1.035; }
 .work-phone:hover .screen img.scrolls { animation-play-state: paused; }
-.badge { position: absolute; right: calc(10 * var(--r)); bottom: calc(10 * var(--r)); z-index: 4; display: inline-flex; align-items: center; gap: calc(6 * var(--r)); padding: calc(6 * var(--r)) calc(10 * var(--r)); border-radius: 99px; background: var(--brown); color: var(--bg); font: 600 calc(11 * var(--r))/1 var(--cond); letter-spacing: .08em; text-transform: uppercase; opacity: 0; transform: translateY(calc(6 * var(--r))); transition: opacity .3s, transform .4s var(--ease); }
+.badge { position: absolute; right: calc(10 * var(--r)); bottom: calc(10 * var(--r)); z-index: 4; display: inline-flex; align-items: center; gap: calc(6 * var(--r)); padding: calc(6 * var(--r)) calc(10 * var(--r)); border-radius: 99px; background: var(--brown); color: var(--bg); font: 600 max(11px, calc(11 * var(--r)))/1 var(--cond); letter-spacing: .08em; text-transform: uppercase; opacity: 0; transform: translateY(calc(6 * var(--r))); transition: opacity .3s, transform .4s var(--ease); }
 .badge svg { width: calc(12 * var(--r)); height: calc(12 * var(--r)); }
 .work-phone:hover .badge, .work-phone:focus-visible .badge { opacity: 1; transform: none; }
-.live-dot { position: absolute; left: calc(10 * var(--r)); top: calc(26 * var(--r)); z-index: 4; display: inline-flex; align-items: center; gap: calc(5 * var(--r)); padding: calc(4 * var(--r)) calc(8 * var(--r)); border-radius: 99px; background: rgba(250,246,236,.92); color: var(--ink); font: 600 calc(10 * var(--r))/1 var(--cond); letter-spacing: .1em; text-transform: uppercase; }
+.live-dot { position: absolute; left: calc(10 * var(--r)); top: calc(26 * var(--r)); z-index: 4; display: inline-flex; align-items: center; gap: calc(5 * var(--r)); padding: calc(4 * var(--r)) calc(8 * var(--r)); border-radius: 99px; background: rgba(250,246,236,.92); color: var(--ink); font: 600 max(11px, calc(10 * var(--r)))/1 var(--cond); letter-spacing: .1em; text-transform: uppercase; }
 .live-dot::before { content: ""; width: calc(6 * var(--r)); height: calc(6 * var(--r)); border-radius: 50%; background: #3f9a4a; }
 .work-label { font: 600 calc(19 * var(--r))/1.1 var(--cond); color: var(--ink); text-align: center; }
-.work-label small { display: block; font: 500 calc(11.5 * var(--r))/1.3 var(--cond); color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin-top: calc(2 * var(--r)); }
+.work-label small { display: block; font: 500 max(11px, calc(11.5 * var(--r)))/1.3 var(--cond); color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin-top: calc(2 * var(--r)); }
 
 /* ---------- More projects ---------- */
 .more-sec, .story-sec { min-height: auto; }
@@ -351,6 +356,10 @@ html.is-embedded .standalone-only { display: none !important; }
 
 /* Hidden until the GSAP entrance runs (class added by portfolio.js only when GSAP is present) */
 .anim .hero .word, .anim .hero .portrait, .anim .hero [data-h] { visibility: hidden; }
+/* Phones: the photo is shown from the first paint (it only rises into place) */
+@media (max-width: 760px), (max-aspect-ratio: 4/5) {
+  html.anim:not(.is-embedded) .hero .portrait { visibility: visible; }
+}
 
 /* ==========================================================
    Responsive
@@ -408,7 +417,7 @@ html.is-embedded .standalone-only { display: none !important; }
   .work-item { flex: none; gap: 12px; scroll-snap-align: center; }
   .work-phone { width: 228px; height: 430px; }
   .screen { inset: 2px; border-radius: 19px; }
-  .live-dot { left: 10px; top: 26px; padding: 4px 8px; font-size: 10px; gap: 5px; } .live-dot::before { width: 6px; height: 6px; }
+  .live-dot { left: 10px; top: 26px; padding: 4px 8px; font-size: 11px; gap: 5px; } .live-dot::before { width: 6px; height: 6px; }
   .badge { opacity: 1; transform: none; right: 10px; bottom: 10px; font-size: 11px; padding: 6px 10px; gap: 6px; } .badge svg { width: 12px; height: 12px; }
   .work-label { font-size: 19px; } .work-label small { font-size: 12px; }
 
@@ -438,13 +447,13 @@ html.is-embedded .standalone-only { display: none !important; }
 /* ==========================================================
    Motion helpers (used by the GSAP layer in portfolio.js)
    ========================================================== */
-.ch { display: inline-block; will-change: transform; }
+.ch { display: inline-block; }
 .ch.sp { width: .26em; }
 .tt { display: inline-block; overflow: hidden; padding: .08em .02em .02em; margin: -.08em 0 -.02em; vertical-align: bottom; }
 .name > span { overflow: hidden; padding-top: .04em; }
 .cta-big { overflow: hidden; padding-bottom: .04em; }
 .wd { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .06em; }
-.wd > span { display: inline-block; will-change: transform; }
+.wd > span { display: inline-block; }
 
 .progress-bar { position: fixed; left: 0; right: 0; top: 0; height: 3px; z-index: 75; background: var(--brown); transform-origin: 0 50%; transform: scaleX(0); pointer-events: none; }
 
@@ -483,8 +492,9 @@ html.is-embedded .standalone-only { display: none !important; }
    Director" template): smooth scroll, decode text, cursor,
    orbit ring, velocity marquee, opening curtain.
    ========================================================== */
-html.has-lenis { scroll-behavior: auto; }
 html.lenis, html.lenis body { height: auto; }
+/* Below-the-fold sections stay hidden until their entrance states are prepared (see prepare() in portfolio.js) */
+.anim .prep-wait { visibility: hidden; }
 .lenis.lenis-stopped { overflow: hidden; }
 
 /* Opening curtain (standalone visits) */
@@ -500,7 +510,7 @@ html.lenis, html.lenis body { height: auto; }
 .orbit { width: 100%; height: 100%; overflow: visible; display: block; animation: orbit-spin 40s linear infinite; will-change: transform; }
 .orbit-wrap.paused .orbit { animation-play-state: paused; }
 @keyframes orbit-spin { to { transform: rotate(360deg); } }
-.portrait, .word { will-change: transform; }
+.portrait { will-change: transform; }
 .orbit-path { stroke: #3B2116; stroke-width: 1.4; opacity: .5; }
 .orbit-inner { stroke: #3B2116; stroke-width: 1; opacity: .22; stroke-dasharray: 2 9; }
 .orbit-spin circle { fill: #3B2116; }

@@ -64,11 +64,11 @@
       more: 'Animation is handled with GSAP and Framer Motion, app state with Zustand, and the back end with Supabase.' },
     { slug: 'space-cleaner', name: 'Space Cleaner', alias: ['space cleaner', 'cleaner', 'storage', 'disk', 'duplicate', 'files cleaner'],
       what: 'a storage tool that finds duplicate, unused and heavy files and shows where your disk space went, using interactive D3 maps.',
-      stack: ['React', 'TypeScript', 'Vite', 'D3.js', 'TanStack Virtual', 'Zustand'], live: 'https://space-cleaner.vercel.app', repo: 'https://github.com/10-aqib/Cleaner',
+      stack: ['React', 'TypeScript', 'Vite', 'D3.js', 'TanStack Virtual', 'Zustand', 'Tauri'], live: 'https://space-cleaner.vercel.app', repo: 'https://github.com/10-aqib/Cleaner',
       more: 'Long file lists stay smooth with a virtualized list, and a keyboard command palette keeps everything one shortcut away.' },
     { slug: 'skillbridge', name: 'SkillBridge', alias: ['skillbridge', 'skill bridge', 'skilled workers', 'local services', 'mentors', 'final year'],
-      what: 'a platform connecting customers with reliable local skilled workers and service providers — a Flutter mobile app on Firebase, plus a companion Next.js website.',
-      stack: ['Flutter', 'Dart', 'Firebase', 'Next.js', 'TypeScript'], live: null, repo: 'https://github.com/10-aqib/SkillBridge-',
+      what: 'a platform connecting customers with reliable local skilled workers and service providers — a Flutter mobile app on Firebase, plus a companion Next.js website backed by Supabase.',
+      stack: ['Flutter', 'Dart', 'Firebase', 'Riverpod', 'Next.js', 'Supabase'], live: null, repo: 'https://github.com/10-aqib/SkillBridge-',
       more: 'It isn’t publicly deployed yet, so it’s shared as a case study with its source code (the Flutter app and the website are separate repositories).' },
     { slug: 'pixelmint', name: 'PixelMint', alias: ['pixelmint', 'pixel mint', 'image compressor', 'compress images', 'resize images', 'image tool'],
       what: 'an image tool that compresses, resizes and converts images entirely in the browser — images are never uploaded to a server.',
@@ -81,7 +81,7 @@
     { slug: 'infinity-basket-mart', name: 'Infinity Basket Mart', alias: ['infinity', 'basket', 'mart', 'grocery', 'ecommerce store', 'online store', 'f-8', 'f8'],
       what: 'an e-commerce website built for Infinity Basket, a local mart in F-8, Islamabad — one of his client projects.',
       stack: ['E-commerce', 'Responsive design'], live: null, repo: 'https://github.com/10-aqib/Infinity-Basket-Mart',
-      more: 'It gives the mart’s customers a digital shopping experience and is one of the 5+ projects he has delivered for local businesses.' }
+      more: 'It gives the mart’s customers a digital shopping experience and is one of the 5+ projects he has delivered for local businesses. The client’s code isn’t public — the GitHub repository only holds project notes.' }
   ];
   const projectBy = (slug) => PROJECTS.find((p) => p.slug === slug);
   const projectCard = (p) => `<strong>${esc(p.name)}</strong> is ${p.what}<div class="ai-acts">${project(p.slug)}${p.live ? ext(p.live, 'Live site ↗') : ''}${ext(p.repo, 'GitHub ↗')}</div>`;
@@ -347,12 +347,12 @@
   const root = document.createElement('div');
   root.className = 'ai';
   root.innerHTML = `
-    <button class="ai-launch" type="button" aria-expanded="false" aria-controls="aiPanel">
+    <button class="ai-launch" type="button" aria-expanded="false" aria-controls="aiPanel" aria-label="Ask about me — open the chat assistant">
       <span class="ai-launch-star">${STAR}</span><span class="ai-launch-label">Ask about me</span>
     </button>
     <section class="ai-panel" id="aiPanel" role="dialog" aria-modal="false" aria-labelledby="aiTitle" hidden>
       <header class="ai-head">
-        <span class="ai-avatar"><img src="assets/profile-optimized.jpg" alt="" width="40" height="40"><i class="ai-online" aria-hidden="true"></i></span>
+        <span class="ai-avatar"><img src="assets/avatar-96.webp" alt="" width="40" height="40" loading="lazy" decoding="async"><i class="ai-online" aria-hidden="true"></i></span>
         <div class="ai-id"><h2 id="aiTitle">Muhammad's assistant</h2><p>Trained on his CV &amp; projects · replies instantly</p></div>
         <button class="ai-icon" type="button" data-ai-reset aria-label="Start a new conversation" title="New conversation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <button class="ai-icon" type="button" data-ai-close aria-label="Close assistant"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>

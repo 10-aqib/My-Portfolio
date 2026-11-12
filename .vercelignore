@@ -1,0 +1,12 @@
+# Keep development files and unused assets out of the public deployment.
+# (They stay in the repository; this only affects what Vercel serves.)
+.claude/
+.vscode/
+server.js
+README.md
+Untitled-1.txt
+lh-*.json
+lighthouse-*.json
+assets/Aqib CV.pdf
+assets/WhatsApp Image *.jpeg
+assets/portrait-cutout.webp
