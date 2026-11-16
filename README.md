@@ -36,6 +36,13 @@ The monitor shows the real, clickable portfolio (`portfolio.html`) through a CSS
 draws the desk, keyboard, mouse and lighting around it. Scroll (or click the screen) to sit down; press Esc to step back.
 
 - `index.html` + `assets/desk/` — 3D shell, camera path, loader
+- `assets/desk/scene.js` — the room itself, fully procedural (no model downloads): walnut desk and hardwood floor
+  with generated PBR textures (albedo + roughness + bump), painted plaster wall, pleated linen curtain, glass-sided
+  gaming PC with RGB fans, padded leather chair, articulated desk lamp, shelf with LED strip, plants and a live clock.
+  Lighting is warm area lights (shelf, riser), a cool monitor halo, a shadow-casting window light, a desk-lamp spot,
+  and a custom dark-room reflection environment. Soft contact shadows stand in for ambient occlusion (the monitor
+  needs an alpha canvas, so there is no post-processing pass). Shadow maps are static and only re-rendered when
+  the mouse or a key moves. Low-end devices automatically get smaller shadow maps and fewer area/point lights.
 - `portfolio.html` + `assets/portfolio/` — the portfolio app shown on the monitor, and the site phones get directly
 - `classic.html` — the previous one-page site, kept as-is
 - Add `?2d` to the URL to skip the 3D desk. Run locally with `node server.js` (or `PORT=5180 node server.js`).

@@ -41,11 +41,10 @@ boot().catch(fail);
 
 async function boot() {
   setProgress(0.08, 'Loading the 3D engine…');
-  const [THREE, { CSS3DRenderer, CSS3DObject }, { RoundedBoxGeometry }, { RoomEnvironment }, { RectAreaLightUniformsLib }, { buildWorkspace }] = await Promise.all([
+  const [THREE, { CSS3DRenderer, CSS3DObject }, { RoundedBoxGeometry }, { RectAreaLightUniformsLib }, { buildWorkspace }] = await Promise.all([
     import('three'),
     import('three/addons/renderers/CSS3DRenderer.js'),
     import('three/addons/geometries/RoundedBoxGeometry.js'),
-    import('three/addons/environments/RoomEnvironment.js'),
     import('three/addons/lights/RectAreaLightUniformsLib.js'),
     import('./scene.js')
   ]);
@@ -66,9 +65,12 @@ async function boot() {
   renderer.setSize(innerWidth, innerHeight);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.0;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  // The room is static: shadow maps are only re-rendered when something that casts moves
+  // (see `shadowsDirty`), so scrolling the camera never pays for them.
+  renderer.shadowMap.autoUpdate = false;
   renderer.setClearColor(0x000000, 1);
 
   const cssRenderer = new CSS3DRenderer();
@@ -82,16 +84,16 @@ async function boot() {
 
   const camera = new THREE.PerspectiveCamera(34, innerWidth / innerHeight, 1, 3000);
 
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  const envTex = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
-  scene.environment = envTex;
   RectAreaLightUniformsLib.init();
 
 
   /* ---------------- Workspace (scene.js) ---------------- */
+  const tBuild = performance.now();
   const ws = buildWorkspace({ THREE, RoundedBoxGeometry, scene, renderer, low, onChange: () => invalidate() });
   const { SCREEN_W, SCREEN_H, SCREEN_CY, SCREEN_Z, MON_Z, monitor, hole, panel, glassMat, led,
-    keys, keyIndex, keyPress, layoutKey, mouseGroup, MOUSE_HOME, screenLight, barLight } = ws;
+    keys, keyIndex, keyPress, layoutKey, mouseGroup, MOUSE_HOME, setPower, followMouse } = ws;
+
+  const buildMs = Math.round(performance.now() - tBuild);
 
   /* ---------------- CSS3D screen (the real portfolio) ---------------- */
   const screenEl = document.createElement('div');
@@ -160,6 +162,7 @@ async function boot() {
   const mouse3d = { x: 0, z: 0, tx: 0, tz: 0, click: 0 };
   let mode = 'overview';
   let dirty = 3;
+  let shadowsDirty = true;
   const invalidate = (n = 2) => { dirty = Math.max(dirty, n); };
 
   const camPos = new THREE.Vector3();
@@ -332,7 +335,10 @@ async function boot() {
     mouseGroup.position.set(MOUSE_HOME.x + mouse3d.x, MOUSE_HOME.y - mouse3d.click * 0.12, MOUSE_HOME.z + mouse3d.z);
     mouseGroup.rotation.y = -mouse3d.x * 0.03;
     if (mouse3d.click > 0) { mouse3d.click = Math.max(0, mouse3d.click - dt * 7); invalidate(); }
-    if (Math.abs(mouse3d.tx - mouse3d.x) + Math.abs(mouse3d.tz - mouse3d.z) > 1e-3) invalidate();
+    if (Math.abs(mouse3d.tx - mouse3d.x) + Math.abs(mouse3d.tz - mouse3d.z) > 1e-3) {
+      followMouse(mouseGroup.position.x, mouseGroup.position.z);
+      shadowsDirty = true; invalidate();
+    }
 
     // Key presses spring back
     let keysMoving = false;
@@ -343,15 +349,14 @@ async function boot() {
         keysMoving = true;
       }
     }
-    if (keysMoving) { keys.instanceMatrix.needsUpdate = true; invalidate(); }
+    if (keysMoving) { keys.instanceMatrix.needsUpdate = true; shadowsDirty = true; invalidate(); }
 
     if (dirty > 0) {
       dirty--;
       updateCamera();
       updateHud();
-      screenLight.intensity = state.power * 2.6;
-      barLight.intensity = 2 + state.power * 6;
-      led.material.opacity = state.power * 0.8;
+      setPower(state.power);
+      if (shadowsDirty) { renderer.shadowMap.needsUpdate = true; shadowsDirty = false; }
       renderer.render(scene, camera);
       cssRenderer.render(scene, camera);
 
@@ -366,7 +371,6 @@ async function boot() {
             renderer.setPixelRatio(dpr);
             renderer.setSize(innerWidth, innerHeight);
           }
-          if (avg > 0.04) { renderer.shadowMap.autoUpdate = false; renderer.shadowMap.needsUpdate = true; }
         }
       }
     }
@@ -376,12 +380,12 @@ async function boot() {
   // ?debug: render a given scroll position synchronously (useful when frames are throttled).
   if (/[?&]debug(=|&|$)/.test(location.search)) {
     window.__desk = {
-      state, camera,
+      state, camera, renderer, buildMs,
       render: (p) => {
         Object.assign(state, { intro: 1, power: 1, scroll: p, blur: 0 }); scrollGoal = p;
         loader.style.display = 'none'; body.classList.remove('is-loading', 'is-intro');
         $('#stage').classList.remove('is-blurred'); screenEl.classList.add('on'); screenEl.style.animation = 'none'; screenEl.style.opacity = '1';
-        screenLight.intensity = 2.6; barLight.intensity = 8; led.material.opacity = 0.8;
+        setPower(1); renderer.shadowMap.needsUpdate = true;
         updateCamera(); updateHud(); renderer.render(scene, camera); cssRenderer.render(scene, camera);
         return camera.position.toArray().map((v) => +v.toFixed(1));
       },
@@ -396,8 +400,11 @@ async function boot() {
 
   // Warm up: compile shaders before revealing anything.
   updateCamera();
+  setPower(0);
   renderer.compile(scene, camera);
+  renderer.shadowMap.needsUpdate = true;
   renderer.render(scene, camera);
+  shadowsDirty = false;
   setProgress(0.7, 'Booting the portfolio…');
 
   await Promise.all([iframeReady, document.fonts ? document.fonts.ready : Promise.resolve()]);
