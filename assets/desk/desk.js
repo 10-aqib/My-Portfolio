@@ -105,6 +105,10 @@ async function boot() {
   iframe.src = `portfolio.html?embed=1${deep}`;
   screenEl.appendChild(iframe);
   const screenObj = new CSS3DObject(screenEl);
+  // CSS3DObject forces an inline `pointer-events: auto`, which beats the stylesheet and made the
+  // iframe swallow the wheel/hover/click whenever the pointer was over the monitor. Drop it so the
+  // CSS applies: inert in the overview (scroll drives the camera), interactive only in focus mode.
+  screenEl.style.removeProperty('pointer-events');
   screenObj.position.set(0, SCREEN_CY, SCREEN_Z);
   monitor.add(screenObj);
 
@@ -289,6 +293,7 @@ async function boot() {
     if (e.origin !== location.origin || !e.data || typeof e.data.type !== 'string') return;
     const d = e.data;
     if (d.type === 'portfolio:exit') stepBack();
+    else if (d.type === 'portfolio:wheel') { if (mode === 'focus' && typeof d.dy === 'number') window.scrollBy(0, d.dy); }
     else if (d.type === 'portfolio:key') press(d.code);
     else if (d.type === 'portfolio:click') { mouse3d.click = 1; invalidate(); }
     else if (d.type === 'portfolio:pointer') { mouse3d.tx = (d.x * 2 - 1) * 4.5; mouse3d.tz = (d.y * 2 - 1) * 3.2; invalidate(); }

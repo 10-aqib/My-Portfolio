@@ -371,6 +371,19 @@
       requestAnimationFrame(() => { queued = false; post({ type: 'portfolio:pointer', x: px, y: py }); });
     }, { passive: true });
     addEventListener('pointerdown', () => post({ type: 'portfolio:click' }), { passive: true });
+    // Scrolling up past the top of the monitor hands the wheel back to the 3D room, so the
+    // camera can travel back out along the same path it came in on (continuous, no snap).
+    // A short grace period after the page last moved stops trackpad inertia from the scroll
+    // up to the top from carrying straight through into the room.
+    let lastMoved = 0;
+    addEventListener('scroll', () => { if (scrollY > 2) lastMoved = performance.now(); }, { passive: true });
+    addEventListener('wheel', (e) => {
+      if (e.deltaY >= 0 || e.ctrlKey || scrollY > 2) return;
+      if (e.target.closest && e.target.closest('.sheet, .menu, .ai-panel')) return;
+      if (openSheet || !menu.hidden) return;
+      if (performance.now() - lastMoved < 350) return;
+      post({ type: 'portfolio:wheel', dy: Math.max(-600, e.deltaY * (e.deltaMode === 1 ? 16 : 1)) });
+    }, { passive: true, capture: true });
     addEventListener('message', (e) => {
       if (e.origin !== location.origin || !e.data) return;
       if (e.data.type === 'desk:power') { powered = true; if (startIntro) startIntro(); }
@@ -527,27 +540,49 @@
       idleQueue.push(run);
       return run;
     };
+    // Repeatable viewport triggers. An element is "in" while any part of it sits between the
+    // top of the viewport and the `start` line (default 72% down) - the same range as a
+    // ScrollTrigger with start: 'top 72%', end: 'bottom top'. Entering fires `inFn`, leaving
+    // (above or below) fires `outFn`, every time, in either scroll direction.
     const observers = new Map();
-    const onEnter = (trigger, fn, start = 'top 72%') => {
+    const watch = (trigger, inFn, outFn, start = 'top 72%') => {
       const el = typeof trigger === 'string' ? $(trigger) : trigger;
       if (!el) return;
-      if (!('IntersectionObserver' in window)) { fn(); return; }
+      if (!('IntersectionObserver' in window)) { if (inFn) inFn(); return; }
       const pct = parseFloat(String(start).split(' ')[1]) || 72;
-      const key = pct;
-      if (!observers.has(key)) {
-        observers.set(key, new IntersectionObserver((entries, obs) => {
+      if (!observers.has(pct)) {
+        observers.set(pct, new IntersectionObserver((entries) => {
           entries.forEach((en) => {
-            if (!en.isIntersecting) return;
-            obs.unobserve(en.target);
-            const cb = en.target.__onEnter;
-            en.target.__onEnter = null;
-            if (cb) cb();
+            const h = en.target.__watch && en.target.__watch[pct];
+            if (!h) return;
+            (en.isIntersecting ? h.ins : h.outs).forEach((f) => f());
           });
         }, { rootMargin: `0px 0px -${100 - pct}% 0px`, threshold: 0 }));
       }
-      const prev = el.__onEnter;
-      el.__onEnter = prev ? () => { prev(); fn(); } : fn;
-      observers.get(key).observe(el);
+      const reg = el.__watch || (el.__watch = {});
+      const h = reg[pct] || (reg[pct] = { ins: [], outs: [] });
+      if (inFn) h.ins.push(inFn);
+      if (outFn) h.outs.push(outFn);
+      observers.get(pct).observe(el);
+    };
+    // Effects without a reverse (label decode) simply replay on every entry.
+    const onEnter = (trigger, fn, start) => watch(trigger, fn, null, start);
+    // A reveal that plays forward on entry and reverses on exit, any number of times.
+    // `make()` builds a paused tween/timeline once (after `prep()` has set its start state).
+    // GSAP reverses from wherever the playhead is, so a direction change mid-animation
+    // adapts smoothly instead of restarting; reversing is a little quicker than playing.
+    const REVERSE_SPEED = 1.7;
+    const reveal = (trigger, { make, prep, start, onIn, onOut }) => {
+      let anim = null;
+      watch(trigger, () => {
+        if (prep) prep();
+        if (!anim) anim = make();
+        anim.timeScale(1).play();
+        if (onIn) onIn();
+      }, () => {
+        if (anim) anim.timeScale(REVERSE_SPEED).reverse();
+        if (onOut) onOut();
+      }, start);
     };
 
     /* ================= HERO ================= */
@@ -773,22 +808,25 @@
           gsap.set($$('.dots b', c), { scale: 0 });
         });
       });
-      onEnter(sec, () => {
-        prep();
-        // Measure path lengths only when the section is revealed (cards are still hidden here).
-        cards.forEach((c) => prepDraw(drawable($('.illus svg', c))));
-        const t = gsap.timeline({ defaults: { ease: 'power3.out' } });
-        titleIn(title, t, 0);
-        t.to(cards, { autoAlpha: 1, y: 0, rotate: 0, scale: 1, duration: 1, ease: 'power4.out', stagger: 0.16, clearProps: 'transform' }, 0.2);
-        cards.forEach((c, i) => {
-          const at = 0.55 + i * 0.16;
-          t.to(drawable($('.illus svg', c)), { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut', stagger: 0.04 }, at)
-            .to($$('.illus svg [fill]:not([fill="none"])', c), { autoAlpha: 1, duration: 0.5, stagger: 0.03 }, at + 0.45)
-            .to($('h3', c), { autoAlpha: 1, y: 0, duration: 0.6 }, at + 0.35)
-            .to($('.divider', c), { scaleX: 1, duration: 0.6, ease: 'power2.inOut' }, at + 0.5)
-            .to($$('li', c), { autoAlpha: 1, y: 0, duration: 0.45, stagger: 0.07 }, at + 0.6)
-            .to($$('.dots b', c), { scale: 1, duration: 0.35, ease: 'back.out(3)', stagger: 0.08 }, at + 0.85);
-        });
+      reveal(sec, {
+        prep,
+        make: () => {
+          // Measure path lengths only when the section is first revealed (cards are still hidden here).
+          cards.forEach((c) => prepDraw(drawable($('.illus svg', c))));
+          const t = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+          titleIn(title, t, 0);
+          t.to(cards, { autoAlpha: 1, y: 0, rotate: 0, scale: 1, duration: 1, ease: 'power4.out', stagger: 0.16 }, 0.2);
+          cards.forEach((c, i) => {
+            const at = 0.55 + i * 0.16;
+            t.to(drawable($('.illus svg', c)), { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut', stagger: 0.04 }, at)
+              .to($$('.illus svg [fill]:not([fill="none"])', c), { autoAlpha: 1, duration: 0.5, stagger: 0.03 }, at + 0.45)
+              .to($('h3', c), { autoAlpha: 1, y: 0, duration: 0.6 }, at + 0.35)
+              .to($('.divider', c), { scaleX: 1, duration: 0.6, ease: 'power2.inOut' }, at + 0.5)
+              .to($$('li', c), { autoAlpha: 1, y: 0, duration: 0.45, stagger: 0.07 }, at + 0.6)
+              .to($$('.dots b', c), { scale: 1, duration: 0.35, ease: 'back.out(3)', stagger: 0.08 }, at + 0.85);
+          });
+          return t;
+        }
       });
       cards.forEach((c) => tilt(c, 10));
     });
@@ -801,19 +839,22 @@
       gsap.set(wTitle, { autoAlpha: 0 });
       gsap.set(wItems, { autoAlpha: 0 });
     });
-    onEnter(work, () => {
-      prepWork();
-      const t = gsap.timeline({ defaults: { ease: 'power3.out' } });
-      titleIn(wTitle, t, 0);
-      wItems.forEach((it, i) => {
-        const ph = $('.work-phone', it);
-        const at = 0.25 + i * 0.18;
-        t.set(it, { autoAlpha: 1 }, at)
-          .fromTo(ph, { y: 120, rotationY: [-25, 0, 25][i % 3], rotationX: 12, transformPerspective: 1000, autoAlpha: 0 }, { y: 0, rotationY: 0, rotationX: 0, autoAlpha: 1, duration: 1.2, ease: 'power4.out', clearProps: 'transform' }, at)
-          .fromTo($('.screen', ph), { filter: 'brightness(1.8) saturate(0.4)' }, { filter: 'brightness(1) saturate(1)', duration: 1.3, ease: 'power2.out', clearProps: 'filter' }, at + 0.1)
-          .fromTo($('.live-dot', ph), { autoAlpha: 0, x: -10 }, { autoAlpha: 1, x: 0, duration: 0.5 }, at + 0.8)
-          .fromTo($('.work-label', it), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.6 }, at + 0.6);
-      });
+    reveal(work, {
+      prep: prepWork,
+      make: () => {
+        const t = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+        titleIn(wTitle, t, 0);
+        wItems.forEach((it, i) => {
+          const ph = $('.work-phone', it);
+          const at = 0.25 + i * 0.18;
+          t.set(it, { autoAlpha: 1 }, at)
+            .fromTo(ph, { y: 120, rotationY: [-25, 0, 25][i % 3], rotationX: 12, transformPerspective: 1000, autoAlpha: 0 }, { y: 0, rotationY: 0, rotationX: 0, autoAlpha: 1, duration: 1.2, ease: 'power4.out' }, at)
+            .fromTo($('.screen', ph), { filter: 'brightness(1.8) saturate(0.4)' }, { filter: 'brightness(1) saturate(1)', duration: 1.3, ease: 'power2.out' }, at + 0.1)
+            .fromTo($('.live-dot', ph), { autoAlpha: 0, x: -10 }, { autoAlpha: 1, x: 0, duration: 0.5 }, at + 0.8)
+            .fromTo($('.work-label', it), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.6 }, at + 0.6);
+        });
+        return t;
+      }
     });
     $$('.work-phone').forEach((p) => tilt(p, 12));
 
@@ -826,15 +867,19 @@
       gsap.set($$('.sec-lede, .more-foot', more), { autoAlpha: 0, y: 16 });
       gsap.set(mCards, { autoAlpha: 0, y: 60, rotationX: -35, transformPerspective: 900, transformOrigin: '50% 100%' });
     });
-    onEnter(more, () => {
-      prepMore();
-      const t = gsap.timeline({ defaults: { ease: 'power3.out' } });
-      titleIn(mTitle, t, 0);
-      t.to($('.sec-lede', more), { autoAlpha: 1, y: 0, duration: 0.6 }, 0.3)
-        .to(mCards, { autoAlpha: 1, y: 0, rotationX: 0, duration: 0.9, ease: 'power4.out', stagger: 0.1, clearProps: 'transform' }, 0.35)
-        .fromTo($$('.status', more), { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(2.5)', stagger: 0.1 }, 0.8)
-        .to($('.more-foot', more), { autoAlpha: 1, y: 0, duration: 0.5 }, 1);
-    }, 'top 78%');
+    reveal(more, {
+      prep: prepMore,
+      start: 'top 78%',
+      make: () => {
+        const t = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+        titleIn(mTitle, t, 0);
+        t.to($('.sec-lede', more), { autoAlpha: 1, y: 0, duration: 0.6 }, 0.3)
+          .to(mCards, { autoAlpha: 1, y: 0, rotationX: 0, duration: 0.9, ease: 'power4.out', stagger: 0.1 }, 0.35)
+          .fromTo($$('.status', more), { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(2.5)', stagger: 0.1 }, 0.8)
+          .to($('.more-foot', more), { autoAlpha: 1, y: 0, duration: 0.5 }, 1);
+        return t;
+      }
+    });
     mCards.forEach((c) => tilt(c, 7));
 
     await yieldNow();
@@ -855,12 +900,15 @@
       gsap.set(edu, { autoAlpha: 0, y: 30 });
       gsap.set(badge, { scale: 0.6, rotate: -8, autoAlpha: 0 });
     });
-    onEnter(story, () => {
-      prepStory();
-      const t = gsap.timeline({ defaults: { ease: 'power3.out' } });
-      titleIn(sTitle, t, 0);
-      t.to(leadWords, { yPercent: 0, duration: 0.7, ease: 'power4.out', stagger: 0.025 }, 0.25)
-        .to(aboutRest, { autoAlpha: 1, y: 0, duration: 0.55, stagger: 0.06, clearProps: 'transform' }, 0.5);
+    reveal(story, {
+      prep: prepStory,
+      make: () => {
+        const t = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+        titleIn(sTitle, t, 0);
+        t.to(leadWords, { yPercent: 0, duration: 0.7, ease: 'power4.out', stagger: 0.025 }, 0.25)
+          .to(aboutRest, { autoAlpha: 1, y: 0, duration: 0.55, stagger: 0.06 }, 0.5);
+        return t;
+      }
     });
 
     const tline = $('.timeline', story);
@@ -871,18 +919,22 @@
     tline.classList.add('has-line');
     gsap.fromTo(lineEl, { scaleY: 0 }, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: tline, start: 'top 75%', end: 'bottom 55%', scrub: 0.5 } });
     $$('.timeline li', story).forEach((li) => {
-      onEnter(li, () => {
-        prepStory();
-        gsap.to(li, { autoAlpha: 1, x: 0, duration: 0.8, ease: 'power3.out', clearProps: 'transform' });
-        li.classList.add('dot-in');
-      }, 'top 85%');
+      reveal(li, {
+        prep: prepStory,
+        start: 'top 85%',
+        make: () => gsap.to(li, { autoAlpha: 1, x: 0, duration: 0.8, ease: 'power3.out', paused: true }),
+        onIn: () => li.classList.add('dot-in'),
+        onOut: () => li.classList.remove('dot-in')
+      });
     });
-    kickers.forEach((k) => onEnter(k, () => { prepStory(); gsap.to(k, { autoAlpha: 1, x: 0, duration: 0.6 }); }, 'top 88%'));
-    onEnter(edu, () => {
-      prepStory();
-      gsap.to(edu, { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power3.out', clearProps: 'transform' });
-      gsap.to(badge, { scale: 1, rotate: 0, autoAlpha: 1, duration: 0.8, ease: 'back.out(2)', delay: 0.35 });
-    }, 'top 88%');
+    kickers.forEach((k) => reveal(k, { prep: prepStory, start: 'top 88%', make: () => gsap.to(k, { autoAlpha: 1, x: 0, duration: 0.6, paused: true }) }));
+    reveal(edu, {
+      prep: prepStory,
+      start: 'top 88%',
+      make: () => gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } })
+        .to(edu, { autoAlpha: 1, y: 0, duration: 0.8 }, 0)
+        .to(badge, { scale: 1, rotate: 0, autoAlpha: 1, duration: 0.8, ease: 'back.out(2)' }, 0.35)
+    });
 
     /* ================= CONTACT CTA ================= */
     const cta = $('#contact');
@@ -901,16 +953,21 @@
       gsap.set(ctaLinks, { autoAlpha: 0, y: 14 });
       gsap.set($('.copy', cta), { autoAlpha: 0 });
     });
-    onEnter(cta, () => {
-      prepCta();
-      gsap.timeline({ defaults: { ease: 'power3.out' } })
-        .to(ctaSmall, { autoAlpha: 1, letterSpacing: '0.14em', duration: 1 }, 0)
-        .to(bigChars, { yPercent: 0, autoAlpha: 1, duration: 0.8, ease: 'power4.out', stagger: { each: 0.025, from: 'center' } }, 0.2)
-        .to(ctaBtn, { autoAlpha: 1, scale: 1, duration: 0.9, ease: 'elastic.out(1, 0.55)', clearProps: 'transform' }, 0.75)
-        .add(() => ctaBtn.classList.add('shine'), 1.4)
-        .to(ctaLinks, { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.06 }, 1)
-        .to($('.copy', cta), { autoAlpha: 1, duration: 0.6 }, 1.4);
-    }, 'top 55%');
+    reveal(cta, {
+      prep: prepCta,
+      start: 'top 55%',
+      make: () => {
+        const t = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+        t.to(ctaSmall, { autoAlpha: 1, letterSpacing: '0.14em', duration: 1 }, 0)
+          .to(bigChars, { yPercent: 0, autoAlpha: 1, duration: 0.8, ease: 'power4.out', stagger: { each: 0.025, from: 'center' } }, 0.2)
+          .to(ctaBtn, { autoAlpha: 1, scale: 1, duration: 0.9, ease: 'elastic.out(1, 0.55)' }, 0.75)
+          .add(() => ctaBtn.classList.toggle('shine', !t.reversed()), 1.4)
+          .to(ctaLinks, { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.06 }, 1)
+          .to($('.copy', cta), { autoAlpha: 1, duration: 0.6 }, 1.4);
+        t.eventCallback('onReverseComplete', () => ctaBtn.classList.remove('shine'));
+        return t;
+      }
+    });
     // Magnetic button
     if (fine) {
       ctaBtn.addEventListener('pointermove', (e) => {

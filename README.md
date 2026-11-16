@@ -45,6 +45,14 @@ draws the desk, keyboard, mouse and lighting around it. Scroll (or click the scr
   the mouse or a key moves. Low-end devices automatically get smaller shadow maps and fewer area/point lights.
 - `portfolio.html` + `assets/portfolio/` — the portfolio app shown on the monitor, and the site phones get directly
 - `classic.html` — the previous one-page site, kept as-is
+- **Scroll model (fully bidirectional).** The camera path, captions and HUD are pure functions of one damped scroll
+  value, so scrolling up retraces exactly the pose you saw going down. Inside the monitor, section reveals use
+  `watch()`/`reveal()` in `portfolio.js`: a reveal plays when its section enters and reverses when it leaves (above
+  or below), any number of times; GSAP reverses from the current playhead, so changing direction mid-animation
+  adapts instead of restarting. Scrubbed effects (hero depth, progress bar, timeline line) follow scroll directly.
+  Intentionally one-time: the boot loader, screen power-on, hero entrance and the assistant's once-per-session nudge.
+  In focus mode, wheeling up at the very top of the monitor hands the wheel back to the room so the camera travels
+  back out along the same path.
 - Add `?2d` to the URL to skip the 3D desk. Run locally with `node server.js` (or `PORT=5180 node server.js`).
 
 🚀 Running Locally

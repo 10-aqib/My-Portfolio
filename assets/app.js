@@ -82,10 +82,8 @@
     // Masked line spans are clipped by their wrapper, so observe the wrapper instead.
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
-        if (!e.isIntersecting) return;
         const el = e.target._reveal || e.target;
-        el.classList.add('in');
-        io.unobserve(e.target);
+        el.classList.toggle('in', e.isIntersecting);   // repeatable: reverses when scrolled out, replays on return
       });
     }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
     revealEls.forEach((el) => {
