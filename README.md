@@ -45,6 +45,9 @@ draws the desk, keyboard, mouse and lighting around it. Scroll (or click the scr
   the mouse or a key moves. Low-end devices automatically get smaller shadow maps and fewer area/point lights.
 - `portfolio.html` + `assets/portfolio/` — the portfolio app shown on the monitor, and the site phones get directly
 - `classic.html` — the previous one-page site, kept as-is
+- **Ambient motion.** Steam rises from the coffee (GPU particles, no per-frame JS) and the PC's RGB fans, strips and
+  inner light glide blue → green → red → blue on a 12 s loop. They redraw at ~30 fps, pause while the monitor fills
+  the view or the tab is hidden, and are static (no steam, fixed blue) with `prefers-reduced-motion`.
 - **Scroll model (fully bidirectional).** The camera path, captions and HUD are pure functions of one damped scroll
   value, so scrolling up retraces exactly the pose you saw going down. Inside the monitor, section reveals use
   `watch()`/`reveal()` in `portfolio.js`: a reveal plays when its section enters and reverses when it leaves (above

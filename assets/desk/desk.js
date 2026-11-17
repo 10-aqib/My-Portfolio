@@ -91,7 +91,7 @@ async function boot() {
   const tBuild = performance.now();
   const ws = buildWorkspace({ THREE, RoundedBoxGeometry, scene, renderer, low, onChange: () => invalidate() });
   const { SCREEN_W, SCREEN_H, SCREEN_CY, SCREEN_Z, MON_Z, monitor, hole, panel, glassMat, led,
-    keys, keyIndex, keyPress, layoutKey, mouseGroup, MOUSE_HOME, setPower, followMouse } = ws;
+    keys, keyIndex, keyPress, layoutKey, mouseGroup, MOUSE_HOME, setPower, followMouse, update: updateFx, steam } = ws;
 
   const buildMs = Math.round(performance.now() - tBuild);
 
@@ -168,6 +168,12 @@ async function boot() {
   let dirty = 3;
   let shadowsDirty = true;
   const invalidate = (n = 2) => { dirty = Math.max(dirty, n); };
+
+  // Ambient motion (coffee steam, PC RGB cycle) needs a steady redraw. It is throttled to ~30 fps,
+  // paused while the monitor fills the view or the tab is hidden, and off for reduced motion.
+  const ambient = !reduceMotion;
+  if (!ambient) steam.visible = false;
+  let ambientAcc = 0;
 
   const camPos = new THREE.Vector3();
   const camTgt = new THREE.Vector3();
@@ -322,6 +328,11 @@ async function boot() {
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
 
+    if (ambient && mode !== 'focus') {
+      ambientAcc += dt;
+      if (ambientAcc >= 1 / 30) { ambientAcc = 0; invalidate(1); }
+    }
+
     // Ease camera progress toward the scroll position
     const ks = reduceMotion ? 1 : 1 - Math.exp(-dt * 3.2);
     const ds = scrollGoal - state.scroll;
@@ -361,6 +372,7 @@ async function boot() {
       updateCamera();
       updateHud();
       setPower(state.power);
+      if (ambient) updateFx(now / 1000);
       if (shadowsDirty) { renderer.shadowMap.needsUpdate = true; shadowsDirty = false; }
       renderer.render(scene, camera);
       cssRenderer.render(scene, camera);
@@ -385,7 +397,7 @@ async function boot() {
   // ?debug: render a given scroll position synchronously (useful when frames are throttled).
   if (/[?&]debug(=|&|$)/.test(location.search)) {
     window.__desk = {
-      state, camera, renderer, buildMs,
+      state, camera, renderer, buildMs, updateFx, steam,
       render: (p) => {
         Object.assign(state, { intro: 1, power: 1, scroll: p, blur: 0 }); scrollGoal = p;
         loader.style.display = 'none'; body.classList.remove('is-loading', 'is-intro');

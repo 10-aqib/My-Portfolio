@@ -250,6 +250,9 @@ export function buildWorkspace({ THREE, RoundedBoxGeometry, scene, renderer, low
   };
   const glowMat = (color, opacity) => new THREE.MeshBasicMaterial({ map: glowTex, color, transparent: true, opacity, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
   const ledMat = (color) => new THREE.MeshBasicMaterial({ color, toneMapped: false });
+  // Emissive parts of the PC that follow the RGB cycle (material + brightness multiplier).
+  const rgbParts = [];
+  const rgbLed = (k) => { const m = ledMat(0x4f9bff); rgbParts.push({ m, k }); return m; };
 
   /* ================= Environment (reflections) =================
      A small dark room with a warm window, a warm shelf strip and a cool
@@ -749,6 +752,60 @@ export function buildWorkspace({ THREE, RoundedBoxGeometry, scene, renderer, low
     blob(mug, 0, 0.02, 0, 16, 16, 0.5);
   }
 
+  /* ---------- Steam: soft, noisy puffs rising from the coffee ----------
+     GPU particles (no per-frame JS): each point loops through its own life,
+     rising, swaying with a slow swirl, growing and fading out. */
+  const puffTex = pixTex(128, 128, (x, y, o) => {
+    const u = (x + 0.5) / 64 - 1, v = (y + 0.5) / 64 - 1, r = Math.hypot(u, v);
+    const fall = Math.pow(clamp(1 - r, 0, 1), 1.4);
+    const n = 0.35 + 0.95 * fbm(x / 22, y / 22, 4, 77);
+    o[0] = o[1] = o[2] = clamp(fall * n, 0, 1) * 255;
+  }, { wrap: false, srgb: false });
+  const STEAM_N = low ? 18 : 32;
+  const steamGeo = new THREE.BufferGeometry();
+  {
+    const seeds = new Float32Array(STEAM_N * 4);
+    for (let i = 0; i < STEAM_N; i++) { seeds[i * 4] = rand(); seeds[i * 4 + 1] = (i + rand() * 0.6) / STEAM_N; seeds[i * 4 + 2] = rand(); seeds[i * 4 + 3] = rand(); }
+    steamGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(STEAM_N * 3), 3));
+    steamGeo.setAttribute('aSeed', new THREE.BufferAttribute(seeds, 4));
+  }
+  const steamMat = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false,
+    uniforms: { uTime: { value: 0 }, uHeight: { value: 720 }, uMap: { value: puffTex }, uColor: { value: new THREE.Color(0xfff0dc) } },
+    vertexShader: `
+      attribute vec4 aSeed; uniform float uTime; uniform float uHeight;
+      varying float vA; varying float vRot;
+      void main() {
+        float life = 4.4 + aSeed.x * 1.8;
+        float t = fract(uTime / life + aSeed.y);
+        float rise = t * (19.0 + aSeed.z * 7.0);
+        float a = uTime * 0.55 + aSeed.w * 6.2831;
+        vec3 p;
+        p.x = sin(a + rise * 0.23) * (0.3 + 2.4 * t) + t * t * 3.0;   // slow swirl + drift
+        p.z = cos(a * 0.8 + rise * 0.17) * (0.3 + 2.0 * t);
+        p.y = rise;
+        p.xz += (aSeed.zw - 0.5) * 2.4 * (1.0 - t);                  // spread across the surface
+        vec4 mv = modelViewMatrix * vec4(p, 1.0);
+        gl_Position = projectionMatrix * mv;
+        float size = mix(2.6, 10.0, pow(t, 0.65)) * (0.8 + aSeed.x * 0.5);
+        gl_PointSize = clamp(size * projectionMatrix[1][1] * uHeight * 0.5 / gl_Position.w, 1.0, 160.0);
+        vA = smoothstep(0.0, 0.12, t) * (1.0 - smoothstep(0.3, 1.0, t));
+        vRot = aSeed.w * 6.2831 + uTime * (aSeed.x - 0.5) * 0.5;
+      }`,
+    fragmentShader: `
+      uniform sampler2D uMap; uniform vec3 uColor; varying float vA; varying float vRot;
+      void main() {
+        vec2 c = gl_PointCoord - 0.5;
+        float s = sin(vRot), co = cos(vRot);
+        c = vec2(co * c.x - s * c.y, s * c.x + co * c.y) + 0.5;
+        float m = texture2D(uMap, c).r;
+        gl_FragColor = vec4(uColor, m * vA * 0.34);
+      }`
+  });
+  const steam = new THREE.Points(steamGeo, steamMat);
+  steam.frustumCulled = false; steam.renderOrder = 5; steam.position.set(0, 9.1, 0);
+  mug.add(steam);
+
   /* ================= Desk lamp (premium articulated, matte black + brass) ================= */
   const lampMat = std({ color: 0x0c0c0e, metalness: 0.7, roughness: 0.48, envMapIntensity: 0.9 });
   const lamp = new THREE.Group(); lamp.position.set(-84, 0, -22); scene.add(lamp);
@@ -824,7 +881,7 @@ export function buildWorkspace({ THREE, RoundedBoxGeometry, scene, renderer, low
   const fanRingGeo2 = new THREE.TorusGeometry(2.3, 0.1, 8, 40);
   const fanHubGeo = new THREE.CylinderGeometry(1.6, 1.6, 0.9, 24);
   const bladeMat = std({ color: 0x14161a, roughness: 0.38, metalness: 0.2, emissive: BLADE_BLUE, emissiveIntensity: 0.3, side: THREE.DoubleSide });
-  const ringMat = ledMat(new THREE.Color(0x77b5ff).multiplyScalar(1.7));
+  const ringMat = rgbLed(1.7);
   const fanGlowMat = glowMat(0x3c8dff, 0.3);
   const fan = (parent, x, y, z, scale = 1, rotX = 0, rotY = 0) => {
     const f = new THREE.Group(); f.position.set(x, y, z); f.rotation.set(rotX, rotY, 0); f.scale.setScalar(scale); parent.add(f);
@@ -874,7 +931,7 @@ export function buildWorkspace({ THREE, RoundedBoxGeometry, scene, renderer, low
   const boardMat = std({ map: boardTex, roughness: 0.5, metalness: 0.35, envMapIntensity: 0.6 });
   add(pc, rbox(0.6, 32, 34, 0.2, boardMat, 1), PW / 2 - 1.4, 28, -2);
   const gpu = add(pc, rbox(9.5, 4.6, 30, 0.6, M.graphite, 2), 4.5, 18, 1);
-  add(gpu, new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.35, 24), ledMat(new THREE.Color(0xb9d6ff).multiplyScalar(1.1))), -4.85, 1.2, 0);
+  add(gpu, new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.35, 24), rgbLed(1.1)), -4.85, 1.2, 0);
   // CPU cooler: fin stack + fan
   const cooler = add(pc, rbox(7, 9, 9, 0.8, M.graphite, 2), 6, 33, -6);
   for (let i = 0; i < 7; i++) add(cooler, new THREE.Mesh(new THREE.BoxGeometry(0.1, 8.4, 8.4), M.pcMetal), -3.55 + i * 0.01, 0, 0);
@@ -882,10 +939,10 @@ export function buildWorkspace({ THREE, RoundedBoxGeometry, scene, renderer, low
   // Memory with a soft light bar
   for (let i = 0; i < 4; i++) {
     const ram = add(pc, rbox(0.7, 5, 11, 0.2, M.board, 1), 8.55, 34, 4.2 + i * 1.5);
-    add(ram, new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.5, 10.4), ledMat(new THREE.Color(0xa7cbff).multiplyScalar(0.9))), -0.38, 2.5, 0);
+    add(ram, new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.5, 10.4), rgbLed(0.9)), -0.38, 2.5, 0);
   }
   add(pc, rbox(PW - 2, 9, PD - 2.5, 0.6, M.pcMetal, 2), 0, 6.5, 0.3);
-  add(pc, new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.3, PD - 8), ledMat(new THREE.Color(0x77b5ff).multiplyScalar(0.7))), -PW / 2 + 2.2, 11.4, -1);
+  add(pc, new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.3, PD - 8), rgbLed(0.7)), -PW / 2 + 2.2, 11.4, -1);
   // Cables
   [[7.5, 8, -4, 7.5, 24, -4], [8.2, 8, -9, 8.2, 22, -9]].forEach(([x0, y0, z0, x1, y1, z1]) => pc.add(tube(new THREE.Vector3(x0, y0, z0), new THREE.Vector3(x1, y1, z1), 0.3, M.nylon, 8)));
   // Tempered glass: front and left side (tint + fresnel reflection)
@@ -1025,6 +1082,34 @@ export function buildWorkspace({ THREE, RoundedBoxGeometry, scene, renderer, low
   barLight.lookAt(0, 0, 18);
   scene.add(barLight);
 
+  /* ================= Animated effects ================= */
+  // PC RGB: blue -> green -> red -> blue, holding each colour briefly and blending by hue
+  // (so the in-between shades are clean cyan / yellow / magenta, never muddy).
+  const RGB_HUES = [0.6, 0.36, 0.0, -0.4];
+  const RGB_PERIOD = 12;                                                    // seconds for the full loop
+  const rgbCol = new THREE.Color();
+  const rgbAt = (t, out) => {
+    const u = ((t % RGB_PERIOD) / RGB_PERIOD) * 3, seg = Math.min(2, Math.floor(u)), f = u - seg;
+    const e = smoothstep(0.3, 0.9, f);                                      // hold, then glide
+    const h = RGB_HUES[seg] + (RGB_HUES[seg + 1] - RGB_HUES[seg]) * e;
+    return out.setHSL(((h % 1) + 1) % 1, 1, 0.5);
+  };
+  const applyRgb = (t) => {
+    rgbAt(t, rgbCol);
+    rgbParts.forEach(({ m, k }) => m.color.copy(rgbCol).multiplyScalar(k));
+    bladeMat.emissive.copy(rgbCol);
+    fanGlowMat.color.copy(rgbCol);
+    pcLight.color.copy(rgbCol);
+  };
+  const dbSize = new THREE.Vector2();
+  const update = (t) => {
+    applyRgb(t);
+    steamMat.uniforms.uTime.value = t;
+    renderer.getDrawingBufferSize(dbSize);
+    steamMat.uniforms.uHeight.value = dbSize.y;
+  };
+  update(0);
+
   /* ================= Power-up ================= */
   const setPower = (p) => {
     screenLight.intensity = p * 2.6;
@@ -1041,6 +1126,6 @@ export function buildWorkspace({ THREE, RoundedBoxGeometry, scene, renderer, low
     monitor, hole, panel, glassMat, led,
     keys, keyIndex, keyPress, layoutKey,
     mouseGroup, MOUSE_HOME,
-    screenLight, barLight, setPower, followMouse
+    screenLight, barLight, setPower, followMouse, update, steam
   };
 }
