@@ -91,7 +91,7 @@ async function boot() {
   const tBuild = performance.now();
   const ws = buildWorkspace({ THREE, RoundedBoxGeometry, scene, renderer, low, onChange: () => invalidate() });
   const { SCREEN_W, SCREEN_H, SCREEN_CY, SCREEN_Z, MON_Z, monitor, hole, panel, glassMat, led,
-    keys, keyIndex, keyPress, layoutKey, mouseGroup, MOUSE_HOME, setPower, followMouse, update: updateFx, steam } = ws;
+    keys, keyIndex, keyPress, layoutKey, mouseGroup, MOUSE_HOME, setPower, followMouse, update: updateFx, steam, fanBlades } = ws;
 
   const buildMs = Math.round(performance.now() - tBuild);
 
@@ -397,7 +397,7 @@ async function boot() {
   // ?debug: render a given scroll position synchronously (useful when frames are throttled).
   if (/[?&]debug(=|&|$)/.test(location.search)) {
     window.__desk = {
-      state, camera, renderer, buildMs, updateFx, steam,
+      state, camera, renderer, buildMs, updateFx, steam, fanBlades,
       render: (p) => {
         Object.assign(state, { intro: 1, power: 1, scroll: p, blur: 0 }); scrollGoal = p;
         loader.style.display = 'none'; body.classList.remove('is-loading', 'is-intro');

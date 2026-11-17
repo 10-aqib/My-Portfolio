@@ -883,10 +883,12 @@ export function buildWorkspace({ THREE, RoundedBoxGeometry, scene, renderer, low
   const bladeMat = std({ color: 0x14161a, roughness: 0.38, metalness: 0.2, emissive: BLADE_BLUE, emissiveIntensity: 0.3, side: THREE.DoubleSide });
   const ringMat = rgbLed(1.7);
   const fanGlowMat = glowMat(0x3c8dff, 0.3);
+  const fanBlades = [];                                                      // spinning blade sets (see update())
   const fan = (parent, x, y, z, scale = 1, rotX = 0, rotY = 0) => {
     const f = new THREE.Group(); f.position.set(x, y, z); f.rotation.set(rotX, rotY, 0); f.scale.setScalar(scale); parent.add(f);
     add(f, new THREE.Mesh(fanFrameGeo, M.nylon), 0, 0, -0.65);
     const b = add(f, new THREE.Mesh(bladeGeo, bladeMat), 0, 0, 0); b.rotation.z = rand() * TAU;
+    fanBlades.push({ mesh: b, base: b.rotation.z, k: scale < 1 ? 1.25 : 1 });
     add(f, new THREE.Mesh(fanRingGeo, ringMat), 0, 0, 0.35);
     add(f, new THREE.Mesh(fanRingGeo2, ringMat), 0, 0, 0.3);
     add(f, new THREE.Mesh(fanHubGeo, M.board), 0, 0, 0).rotation.x = Math.PI / 2;
@@ -1101,8 +1103,19 @@ export function buildWorkspace({ THREE, RoundedBoxGeometry, scene, renderer, low
     fanGlowMat.color.copy(rgbCol);
     pcLight.color.copy(rgbCol);
   };
+  // Fans: spin up smoothly after load, then turn at a steady 0.9 rev/s. The cap keeps the
+  // per-frame step (~11 deg at 30 fps) under half the blade spacing, so there is no wagon-wheel effect.
+  const FAN_REV_PER_S = 0.9;
+  let fanAngle = 0, fanSpin = 0, lastT = 0;
+  const spinFans = (t) => {
+    const dt = clamp(t - lastT, 0, 0.1); lastT = t;
+    fanSpin += (1 - fanSpin) * (1 - Math.exp(-dt * 0.9));                  // ease up to full speed (~3 s)
+    fanAngle += dt * fanSpin * FAN_REV_PER_S * TAU;
+    for (const f of fanBlades) f.mesh.rotation.z = f.base + fanAngle * f.k;
+  };
   const dbSize = new THREE.Vector2();
   const update = (t) => {
+    spinFans(t);
     applyRgb(t);
     steamMat.uniforms.uTime.value = t;
     renderer.getDrawingBufferSize(dbSize);
@@ -1126,6 +1139,6 @@ export function buildWorkspace({ THREE, RoundedBoxGeometry, scene, renderer, low
     monitor, hole, panel, glassMat, led,
     keys, keyIndex, keyPress, layoutKey,
     mouseGroup, MOUSE_HOME,
-    screenLight, barLight, setPower, followMouse, update, steam
+    screenLight, barLight, setPower, followMouse, update, steam, fanBlades
   };
 }
