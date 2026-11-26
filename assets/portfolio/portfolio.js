@@ -62,6 +62,46 @@
       stack: ['React', 'TypeScript', 'Vite', 'D3.js', 'TanStack Virtual', 'Zustand', 'Tauri'],
       live: 'https://space-cleaner.vercel.app', repos: [{ label: 'Source', url: `${GH}/Cleaner` }]
     },
+    /* Client products, delivered solo (design → build → launch). Copy taken from the live sites. */
+    {
+      slug: 'cafe-and-co', name: 'Cafe & Co', kind: 'Restaurant & café website', client: true,
+      mobile: 'assets/projects/mobile-cafe-and-co.webp', mh: 1002, desktop: 'assets/projects/cafe-and-co.jpg', dw: 800, dh: 502,
+      summary: 'The website for Cafe & Co., a restaurant and café on East Canal Road, Rahim Yar Khan.',
+      body: [
+        'Cafe & Co. serves steaks, pasta, pizza, BBQ and karahi alongside a full coffee bar. The site brings all of it online: specials, drinks and coffee menus with prices, set deals for the table, opening hours and a book-a-table call to action.',
+        'It also introduces the chefs and runs a news & blog section the owners update themselves. I delivered it as a solo developer, from layout and content through to launch.'
+      ],
+      highlights: ['Specials, drinks and coffee menus with prices', 'Deals menu and book-a-table calls to action', 'Chef profiles and opening hours', 'News & blog the owners manage themselves'],
+      role: 'Solo developer — design, build and launch',
+      stack: ['WordPress', 'WooCommerce', 'Elementor'],
+      live: 'https://cafeandco.pk', repos: []
+    },
+    {
+      slug: 'royal-stones', name: 'Royal Stones', kind: 'Gemstone e-commerce store', client: true,
+      mobile: 'assets/projects/mobile-royal-stones.webp', mh: 3200, desktop: 'assets/projects/royal-stones.jpg', dw: 800, dh: 502,
+      summary: 'An online store for natural, certified gemstones and 925 silver jewellery, with a companion Android app.',
+      body: [
+        'Royal Stones sells natural gemstones — turquoise (feroza), ruby (yaqoot), blue sapphire (neelam) and more — plus 925 silver rings, bracelets, chains and beads, shipping worldwide.',
+        'Shoppers browse by category, sort each collection by price, add to cart, sign in and track their orders. The store is matched by an Android app on Google Play. I designed, built and launched it as a solo developer.'
+      ],
+      highlights: ['Category browsing with sort-by-price per collection', 'Cart, customer login and order tracking', 'Bilingual product names (English / Urdu)', 'Companion Android app on Google Play'],
+      role: 'Solo developer — design, build and launch',
+      stack: ['React', 'Vite', 'Firebase', 'Vercel', 'Android'],
+      live: 'https://www.royalstonepk.com', repos: []
+    },
+    {
+      slug: 'whites-castle', name: 'Whites Castle', kind: 'Pizza ordering platform', client: true,
+      mobile: 'assets/projects/mobile-whites-castle.webp', mh: 1100, desktop: 'assets/projects/whites-castle.jpg', dw: 800, dh: 502,
+      summary: 'Online ordering for Whites Castle, a pizza restaurant — delivery or pick-up, straight from the menu.',
+      body: [
+        'Customers choose delivery or pick-up, set their location with one tap or by city and area, then order from a full menu: wraps, fried items, deals, special, traditional and square pizzas, pasta, desserts and drinks.',
+        'Menu search, a cart, customer accounts, branch details and opening hours complete it. Built with Next.js and deployed on Vercel — delivered solo, end to end.'
+      ],
+      highlights: ['Delivery or pick-up with location detection', 'Full categorised menu with deals and search', 'Cart and customer accounts', 'Next.js, prerendered for fast loads'],
+      role: 'Solo developer — design, build and launch',
+      stack: ['Next.js', 'React', 'Vercel'],
+      live: 'https://whitescastle.com', repos: []
+    },
     {
       slug: 'skillbridge', name: 'SkillBridge', kind: 'Web + Flutter platform', status: 'In development',
       cover: 'Skill Bridge',
@@ -117,8 +157,7 @@
   ];
 
   /* ---------- Work phones ---------- */
-  const featured = PROJECTS.filter((p) => p.featured);
-  $('#workPhones').innerHTML = featured.map((p) => `
+  const phoneItem = (p) => `
     <div class="work-item" data-r="card">
       <button class="phone work-phone" type="button" data-open="${p.slug}" aria-label="Open ${esc(p.name)} case study">
         <i class="notch" aria-hidden="true"></i>
@@ -127,9 +166,11 @@
         <span class="badge">View project ${icon('arrow')}</span>
       </button>
       <p class="work-label">${esc(p.name)}<small>${esc(p.kind)}</small></p>
-    </div>`).join('');
+    </div>`;
+  $('#workPhones').innerHTML = PROJECTS.filter((p) => p.featured).map(phoneItem).join('');
+  $('#clientPhones').innerHTML = PROJECTS.filter((p) => p.client).map(phoneItem).join('');
 
-  $('#moreGrid').innerHTML = PROJECTS.filter((p) => !p.featured).map((p) => `
+  $('#moreGrid').innerHTML = PROJECTS.filter((p) => !p.featured && !p.client).map((p) => `
     <button class="more-card" type="button" data-open="${p.slug}" data-r="card">
       <span class="status">${esc(p.status)}</span>
       <h3>${esc(p.name)}</h3>
@@ -770,7 +811,7 @@
 
     // Continuous motion only runs while its section is on screen.
     ST.create({ trigger: '#home', start: 'top bottom', end: 'bottom top', onToggle: (s) => orbitWrap.classList.toggle('paused', !s.isActive) });
-    ST.create({ trigger: '#work', start: 'top bottom', end: 'bottom top', toggleClass: { targets: '#work', className: 'in-view' } });
+    ['#work', '#clients'].forEach((id) => ST.create({ trigger: id, start: 'top bottom', end: 'bottom top', toggleClass: { targets: id, className: 'in-view' } }));
 
     // Small labels decode as they scroll into view.
     $$('.kicker, .when, .work-label small, .status, .cta-small, .facts span, .org, .service li, .more-open').forEach((el) => {
@@ -832,7 +873,7 @@
     });
 
     /* ================= WORK ================= */
-    const work = $('#work');
+    $$('.work-sec').forEach((work) => {
     const wTitle = $('.title', work);
     const wItems = $$('.work-item', work);
     const prepWork = prepare(work, $('.stage', work), () => {
@@ -855,6 +896,7 @@
         });
         return t;
       }
+    });
     });
     $$('.work-phone').forEach((p) => tilt(p, 12));
 
