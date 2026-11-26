@@ -611,7 +611,7 @@
 
     const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
     tl.fromTo(q('.word'), { clipPath: 'inset(0 100% 0 0)', scaleX: 1.08, transformOrigin: '0% 50%' }, { clipPath: 'inset(0 0% 0 0)', scaleX: 1, duration: 1.4, ease: 'power3.inOut' })
-      .fromTo(q('.word text'), { fill: '#d8ccbd' }, { fill: '#A99B8D', duration: 1.2, ease: 'power1.out' }, 0.5)
+      .fromTo(q('.word text'), { fill: '#2e2e2e' }, { fill: '#1D1D1D', duration: 1.2, ease: 'power1.out' }, 0.5)
       // Phones: the photo is visible from the first paint and only rises into place
       // (it's the largest element, so hiding it delayed Largest Contentful Paint).
       .fromTo(q('.portrait'), phone

@@ -2,7 +2,7 @@
    3D desk shell
    ========================================================== */
 :root {
-  --lime: #ccff00;
+  --lime: #F26A1F;
   --text: #f4f4f1;
   --muted: #9a9a96;
   --line: rgba(255, 255, 255, 0.14);
@@ -26,14 +26,14 @@ kbd { font-family: var(--mono); font-size: 10.5px; border: 1px solid var(--line)
 :focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; border-radius: 6px; }
 .mono { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; }
 .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--lime); margin-right: 10px; animation: pulse 2.2s infinite; vertical-align: 1px; }
-@keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(204,255,0,.45); } 50% { box-shadow: 0 0 0 6px rgba(204,255,0,0); } }
+@keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(242,106,31,.45); } 50% { box-shadow: 0 0 0 6px rgba(242,106,31,0); } }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .skip-link { position: fixed; left: 12px; top: -60px; z-index: 100; background: var(--lime); color: #000; padding: 10px 16px; border-radius: 999px; font-weight: 600; transition: top .2s; }
 .skip-link:focus { top: 12px; }
 
 .btn { display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 22px; border-radius: 999px; font-weight: 600; font-size: 15px; transition: transform .35s var(--ease), background .25s; }
 .btn-lime { background: var(--lime); color: #0a0a0a; }
-.btn-lime:hover { background: #dbff4d; transform: translateY(-2px); }
+.btn-lime:hover { background: #FF7E3A; transform: translateY(-2px); }
 
 /* ---------- Stage ---------- */
 .stage { position: fixed; inset: 0; overflow: hidden; background: #000; }
@@ -46,7 +46,7 @@ kbd { font-family: var(--mono); font-size: 10.5px; border: 1px solid var(--line)
 
 /* Screen surface inside the monitor (CSS3DObject) */
 .screen { background: #000; overflow: hidden; pointer-events: none; opacity: 0; }
-.screen iframe { display: block; width: 100%; height: 100%; border: 0; background: #F4EFE4; }
+.screen iframe { display: block; width: 100%; height: 100%; border: 0; background: #0E0E0E; }
 .screen.on { animation: power-on 1.1s cubic-bezier(.2,.7,.2,1) both; }
 @keyframes power-on {
   0% { opacity: 0; filter: brightness(3) saturate(0); clip-path: inset(49.5% 0 49.5% 0); }
