@@ -60,7 +60,11 @@ draws the desk, keyboard, mouse and lighting around it. Scroll (or click the scr
 
 🚀 Running Locally
 
-This is a static site — no build step required.
+This is a static site. The only build step is for SEO: after editing a project in
+`assets/portfolio/projects.js`, run `node scripts/build-seo.mjs` to regenerate the
+crawlable project pages (`projects/*.html`), `sitemap.xml`, and the structured data
+in `portfolio.html` / `index.html`. Commit the generated files. Run the local server
+with `node server.js` (it mirrors Vercel's clean URLs, e.g. `/portfolio`).
 
 bash
 git clone https://github.com/10-aqib/<repo-name>.git

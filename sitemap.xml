@@ -1,13 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://aqibkhn.space/</loc>
+    <loc>https://aqibkhn.space/portfolio</loc>
+    <lastmod>2026-11-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
+    <image:image><image:loc>https://aqibkhn.space/assets/portrait.webp</image:loc><image:title>Muhammad Aqib, web and mobile application developer</image:title></image:image>
+    <image:image><image:loc>https://aqibkhn.space/assets/og-image.jpg</image:loc><image:title>Muhammad Aqib — Web &amp; Mobile Application Developer</image:title></image:image>
   </url>
   <url>
-    <loc>https://aqibkhn.space/portfolio.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <loc>https://aqibkhn.space/projects/1tap</loc>
+    <lastmod>2026-11-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://aqibkhn.space/assets/projects/1tap.jpg</image:loc><image:title>1Tap — Real-time web app</image:title></image:image>
+  </url>
+  <url>
+    <loc>https://aqibkhn.space/projects/beef-burger-patties</loc>
+    <lastmod>2026-11-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://aqibkhn.space/assets/projects/beef-burger.jpg</image:loc><image:title>Beef Burger Patties — Restaurant ordering app</image:title></image:image>
+  </url>
+  <url>
+    <loc>https://aqibkhn.space/projects/space-cleaner</loc>
+    <lastmod>2026-11-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://aqibkhn.space/assets/projects/space-cleaner.jpg</image:loc><image:title>Space Cleaner — Storage tool</image:title></image:image>
+  </url>
+  <url>
+    <loc>https://aqibkhn.space/projects/cafe-and-co</loc>
+    <lastmod>2026-11-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://aqibkhn.space/assets/projects/cafe-and-co.jpg</image:loc><image:title>Cafe &amp; Co — Restaurant &amp; café website</image:title></image:image>
+  </url>
+  <url>
+    <loc>https://aqibkhn.space/projects/royal-stones</loc>
+    <lastmod>2026-11-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://aqibkhn.space/assets/projects/royal-stones.jpg</image:loc><image:title>Royal Stones — Gemstone e-commerce store</image:title></image:image>
+  </url>
+  <url>
+    <loc>https://aqibkhn.space/projects/whites-castle</loc>
+    <lastmod>2026-11-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://aqibkhn.space/assets/projects/whites-castle.jpg</image:loc><image:title>Whites Castle — Pizza ordering platform</image:title></image:image>
+  </url>
+  <url>
+    <loc>https://aqibkhn.space/projects/skillbridge</loc>
+    <lastmod>2026-11-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://aqibkhn.space/projects/pixelmint</loc>
+    <lastmod>2026-11-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://aqibkhn.space/projects/text-to-speech</loc>
+    <lastmod>2026-11-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://aqibkhn.space/projects/infinity-basket-mart</loc>
+    <lastmod>2026-11-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>

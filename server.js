@@ -27,7 +27,9 @@ const TEXT = new Set(['.html', '.js', '.mjs', '.css', '.json', '.svg', '.txt', '
 const requestHandler = (req, res) => {
   let cleanUrl;
   try { cleanUrl = decodeURIComponent(req.url.split('?')[0]); } catch (e) { cleanUrl = '/'; }
-  const filePath = path.resolve(ROOT, '.' + (cleanUrl === '/' ? '/index.html' : cleanUrl));
+  let filePath = path.resolve(ROOT, '.' + (cleanUrl === '/' ? '/index.html' : cleanUrl));
+  // Mirror Vercel's cleanUrls: /portfolio and /projects/x serve the matching .html file
+  if (!path.extname(filePath) && fs.existsSync(filePath + '.html')) filePath += '.html';
   // Never serve files outside the project folder (blocks ../ traversal)
   if (filePath !== ROOT && !filePath.startsWith(ROOT + path.sep)) {
     res.writeHead(403, { 'Content-Type': 'text/plain' });

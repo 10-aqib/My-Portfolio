@@ -34,7 +34,7 @@ const fail = (err) => {
   console.error('[desk] falling back to 2D portfolio:', err);
   loader.classList.add('done');
   $('#fail').hidden = false;
-  setTimeout(() => location.replace('portfolio.html'), 4000);
+  setTimeout(() => location.replace('portfolio'), 4000);
 };
 
 boot().catch(fail);
@@ -102,7 +102,7 @@ async function boot() {
   iframe.title = 'Muhammad Aqib — portfolio';
   iframe.setAttribute('allow', 'clipboard-write');
   const deep = location.hash.indexOf('#/') === 0 ? location.hash : '';
-  iframe.src = `portfolio.html?embed=1${deep}`;
+  iframe.src = `portfolio?embed=1${deep}`;
   screenEl.appendChild(iframe);
   const screenObj = new CSS3DObject(screenEl);
   // CSS3DObject forces an inline `pointer-events: auto`, which beats the stylesheet and made the

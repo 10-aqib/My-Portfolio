@@ -3,22 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Muhammad Aqib — Web &amp; Mobile Application Developer</title>
+  <title>Muhammad Aqib — Web &amp; Mobile App Developer in Islamabad</title>
   <meta name="description" content="Sit down at Muhammad Aqib's desk: an interactive 3D workstation with his real, working portfolio on the monitor — live projects, experience, skills, CV and contact. Web &amp; mobile developer in Islamabad.">
   <meta name="theme-color" content="#000000">
   <meta property="og:title" content="Muhammad Aqib — Web &amp; Mobile Application Developer">
   <meta property="og:description" content="An interactive 3D workstation with Muhammad Aqib's working portfolio on the screen.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://aqibkhn.space/">
-  <meta property="og:image" content="https://aqibkhn.space/assets/profile.jpg">
+  <meta property="og:image" content="https://aqibkhn.space/assets/og-image.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="canonical" href="https://aqibkhn.space/">
+  <!-- The content-rich page is the one to rank; the 3D desk shows it in an iframe and phones are redirected to it -->
+  <link rel="canonical" href="https://aqibkhn.space/portfolio">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta name="twitter:title" content="Muhammad Aqib — Web &amp; Mobile Application Developer">
   <meta name="twitter:description" content="An interactive 3D workstation with Muhammad Aqib's working portfolio on the screen.">
-  <meta name="twitter:image" content="https://aqibkhn.space/assets/profile.jpg">
+  <meta name="twitter:image" content="https://aqibkhn.space/assets/og-image.jpg">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -42,7 +43,7 @@
       var gl = false;
       try { var c = document.createElement('canvas'); gl = !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) {}
       if (force2d || !gl || w < 860 || (coarse && w < 1024 && h > w)) {
-        location.replace('portfolio.html' + (location.hash.indexOf('#/') === 0 ? location.hash : ''));
+        location.replace('portfolio' + (location.hash.indexOf('#/') === 0 ? location.hash : ''));
         return;
       }
       document.documentElement.classList.add('desk');
@@ -53,7 +54,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap">
   <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" crossorigin>
-  <link rel="prefetch" href="portfolio.html?embed=1">
+  <link rel="prefetch" href="portfolio?embed=1">
   <script type="importmap">
   {
     "imports": {
@@ -65,7 +66,7 @@
   <link rel="stylesheet" href="assets/desk/desk.css">
 </head>
 <body class="is-loading">
-  <a class="skip-link" href="portfolio.html">Skip the 3D desk — open the portfolio</a>
+  <a class="skip-link" href="portfolio">Skip the 3D desk — open the portfolio</a>
 
   <!-- 3D stage: CSS3D layer (real portfolio) under a transparent WebGL canvas -->
   <div class="stage" id="stage" aria-hidden="false">
@@ -81,7 +82,7 @@
       <a href="assets/aqib-cv.pdf" download="Muhammad-Aqib-CV.pdf">Resume <span aria-hidden="true">↓</span></a>
       <a href="https://github.com/10-aqib" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
       <a href="https://www.linkedin.com/in/aqib10" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
-      <a class="pill" href="portfolio.html">Full-screen site <span aria-hidden="true">↗</span></a>
+      <a class="pill" href="portfolio">Full-screen site <span aria-hidden="true">↗</span></a>
     </nav>
   </header>
 
@@ -116,7 +117,7 @@
 
   <div class="focus-bar" id="focusBar">
     <button class="chip" type="button" id="exitBtn"><span aria-hidden="true">←</span> Step back <kbd>Esc</kbd></button>
-    <a class="chip" href="portfolio.html" id="fullBtn">Open full screen <span aria-hidden="true">↗</span></a>
+    <a class="chip" href="portfolio" id="fullBtn">Open full screen <span aria-hidden="true">↗</span></a>
   </div>
 
   <div class="hover-tip mono" id="hoverTip" aria-hidden="true">Click to sit down</div>
@@ -138,7 +139,7 @@
     <p class="mono">3D isn't available here</p>
     <h2>Let's skip the desk.</h2>
     <p>Your browser couldn't start the 3D workstation. The full portfolio works everywhere.</p>
-    <a class="btn btn-lime" href="portfolio.html">Open the portfolio ↗</a>
+    <a class="btn btn-lime" href="portfolio">Open the portfolio ↗</a>
   </div>
 
   <!-- Scroll track that drives the camera -->
@@ -147,7 +148,7 @@
   <noscript>
     <div class="noscript">
       <h2>Muhammad Aqib — Web &amp; Mobile Application Developer</h2>
-      <p>The 3D desk needs JavaScript. <a href="portfolio.html">Open the portfolio</a> or <a href="classic.html">the classic one-page site</a>.</p>
+      <p>The 3D desk needs JavaScript. <a href="portfolio">Open the portfolio</a>.</p>
     </div>
   </noscript>
 
@@ -156,11 +157,20 @@
     <h2>About Muhammad Aqib</h2>
     <p>Web and mobile application developer in Islamabad, Pakistan, studying BS Information Technology at Bahria University. Software &amp; Digital Solutions Intern at Altaf Developers. Builds with Flutter, Dart, Firebase, React, Next.js, TypeScript, Node.js and Supabase.</p>
     <ul>
-      <li><a href="https://1tap-theta.vercel.app">1Tap — share text, links and files between devices</a></li>
-      <li><a href="https://beef-burger-patties.vercel.app">Beef Burger Patties — restaurant ordering web app</a></li>
-      <li><a href="https://space-cleaner.vercel.app">Space Cleaner — storage cleanup tool</a></li>
-      <li><a href="portfolio.html#/projects">All projects</a></li>
-      <li><a href="portfolio.html#/contact">Contact</a></li>
+      <li><a href="portfolio">Full portfolio</a></li>
+      <!-- build-seo:links:start -->
+      <li><a href="projects/1tap">1Tap — Real-time web app</a></li>
+      <li><a href="projects/beef-burger-patties">Beef Burger Patties — Restaurant ordering app</a></li>
+      <li><a href="projects/space-cleaner">Space Cleaner — Storage tool</a></li>
+      <li><a href="projects/cafe-and-co">Cafe &amp; Co — Restaurant &amp; café website</a></li>
+      <li><a href="projects/royal-stones">Royal Stones — Gemstone e-commerce store</a></li>
+      <li><a href="projects/whites-castle">Whites Castle — Pizza ordering platform</a></li>
+      <li><a href="projects/skillbridge">SkillBridge — Web + Flutter platform</a></li>
+      <li><a href="projects/pixelmint">PixelMint — Image tool</a></li>
+      <li><a href="projects/text-to-speech">Speech ⇄ Text — Flutter mobile app</a></li>
+      <li><a href="projects/infinity-basket-mart">Infinity Basket Mart — Client e-commerce site</a></li>
+  <!-- build-seo:links:end -->
+      <li><a href="portfolio#contact">Contact</a></li>
     </ul>
   </div>
 
