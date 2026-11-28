@@ -1,9 +1,16 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/classic", "destination": "/portfolio", "permanent": true }
+    { "source": "/portfolio.html", "destination": "/portfolio", "permanent": true },
+    { "source": "/projects/:slug.html", "destination": "/projects/:slug", "permanent": true },
+    { "source": "/index.html", "destination": "/", "permanent": true },
+    { "source": "/classic", "destination": "/portfolio", "permanent": true },
+    { "source": "/classic.html", "destination": "/portfolio", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/portfolio", "destination": "/portfolio.html" },
+    { "source": "/projects/:slug", "destination": "/projects/:slug.html" }
   ],
   "headers": [
     {
